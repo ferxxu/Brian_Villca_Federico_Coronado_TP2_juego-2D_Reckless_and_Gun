@@ -2,6 +2,38 @@
 <TextureAtlas>
     <Texture>Sprites_pj/movimiento-finalv2.5</Texture>
     <Regions>
-        <Region name="David" x="0" y="0" width="52" height="74" />
+        <Region name="David-1" x="0" y="0" width="52" height="74" />
+        <Region name="David-2" x="118" y="0" width="65" height="74" />
+        <Region name="David-3" x="245" y="0" width="57" height="74" />
+        <Region name="David-4" x="30" y="0" width="52" height="74" />
+        <Region name="David-5" x="40" y="0" width="52" height="74" />
+        <Region name="David-6" x="50" y="0" width="52" height="74" />
+        <Region name="David-7" x="60" y="0" width="52" height="74" />
+        <Region name="David-8" x="40" y="0" width="52" height="74" />
+        <Region name="David-9" x="40" y="0" width="52" height="74" />
+        <Region name="David-10" x="40" y="0" width="52" height="74" />
+        <Region name="David-11" x="40" y="0" width="52" height="74" />
+        <Region name="David-12" x="40" y="0" width="52" height="74" />
+        <Region name="David-13" x="40" y="0" width="52" height="74" />
+        <Region name="David-14" x="40" y="0" width="52" height="74" />
     </Regions>
+    <Animations>
+        <Animation name="David-walk" delay="2000">
+            <Frame region="David-1" />
+            <Frame region="David-2" />
+            <Frame region="David-3" />
+            <Frame region="David-4" />
+            <Frame region="David-5" />
+            <Frame region="David-6" />
+            <Frame region="David-7" />
+            <Frame region="David-8" />
+            <Frame region="David-9" />
+            <Frame region="David-10" />
+            <Frame region="David-11" />
+            <Frame region="David-12" />
+            <Frame region="David-13" />
+            <Frame region="David-14" />
+        </Animation>
+
+    </Animations>
 </TextureAtlas>

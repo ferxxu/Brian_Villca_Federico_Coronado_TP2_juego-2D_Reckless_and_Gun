@@ -9,7 +9,8 @@ namespace Reckless_and_Gun;
 public class Game1 : Core
 {
     // texture region that defines the slime sprite in the atlas.
-    private TextureRegion _pj;
+
+    private AnimatedSprite _pj;
 
 
     public Game1() : base("Reckless and Gun", 1680, 820, false)
@@ -30,7 +31,11 @@ public class Game1 : Core
         TextureAtlas atlas = TextureAtlas.FromFile(Content, "Sprites_pj/Pj.xml");
 
         // retrieve the slime region from the atlas.
-        _pj = atlas.GetRegion("David");
+               // Create the slime sprite from the atlas.
+        _pj = atlas.CreateAnimatedSprite("David-walk");
+        _pj.Scale = new Vector2(2.0f, 2.0f);
+        _pj.Origin = new Vector2(_pj.Width / 2f, _pj.Height / 2f);
+
 
     }
 
@@ -40,7 +45,7 @@ public class Game1 : Core
             Exit();
 
         // TODO: Add your update logic here
-
+        _pj.Update(gameTime);
         base.Update(gameTime);
     }
 
@@ -52,12 +57,11 @@ public class Game1 : Core
         // Begin the sprite batch to prepare for rendering.
         SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        // Draw the slime texture region at a scale of 4.0
-        _pj.Draw(SpriteBatch, new Vector2(
-        (Window.ClientBounds.Width * 0.5f) - (_pj.Width * 0.5f),
-            (Window.ClientBounds.Height * 0.5f) - (_pj.Height * 0.5f)),
-             Color.White, 0.0f, Vector2.One, 2.0f, SpriteEffects.None, 0.0f);
-
+        Vector2 centerOfScreen = new Vector2(
+        Window.ClientBounds.Width / 2f, 
+        Window.ClientBounds.Height / 2f
+    );
+        _pj.Draw (SpriteBatch,centerOfScreen);
         // Always end the sprite batch when finished.
         SpriteBatch.End();
 
