@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+    <Texture>Sprites_pj/movimiento-finalv2.5</Texture>
+    <Regions>
+        <Region name="David" x="0" y="0" width="52" height="74" />
+    </Regions>
+</TextureAtlas>

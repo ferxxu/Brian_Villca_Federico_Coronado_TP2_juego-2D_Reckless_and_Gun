@@ -13,3 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Sprites_pj/movimiento-finalv2.5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites_pj/movimiento-finalv2.5.png
+
+#begin Sprites_pj/Pj.xml
+/copy:Sprites_pj/Pj.xml
+

@@ -1,0 +1,13 @@
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\bin\Debug\net9.0\MonoGame Game library.deps.json
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\bin\Debug\net9.0\MonoGame Game library.dll
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\bin\Debug\net9.0\MonoGame Game library.pdb
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\obj\Debug\net9.0\MonoGame Game library.csproj.AssemblyReference.cache
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\obj\Debug\net9.0\MonoGame Game library.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\obj\Debug\net9.0\MonoGame Game library.AssemblyInfoInputs.cache
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\obj\Debug\net9.0\MonoGame Game library.AssemblyInfo.cs
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\obj\Debug\net9.0\MonoGame Game library.csproj.CoreCompileInputs.cache
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\obj\Debug\net9.0\MonoGame Game library.sourcelink.json
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\obj\Debug\net9.0\MonoGame Game library.dll
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\obj\Debug\net9.0\refint\MonoGame Game library.dll
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\obj\Debug\net9.0\MonoGame Game library.pdb
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\MonoGame Game library\obj\Debug\net9.0\ref\MonoGame Game library.dll
