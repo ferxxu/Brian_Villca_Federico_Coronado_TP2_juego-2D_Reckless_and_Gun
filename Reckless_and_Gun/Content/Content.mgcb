@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Sprites_pj/movimiento-finalv2.5.png
+#begin Sprites_pj/movimiento-finalv2.5 (1).png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,7 +23,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites_pj/movimiento-finalv2.5.png
+/build:Sprites_pj/movimiento-finalv2.5 (1).png
 
 #begin Sprites_pj/Pj.xml
 /copy:Sprites_pj/Pj.xml

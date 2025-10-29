@@ -1,4 +1,3 @@
-C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\Sprites_pj\movimiento-finalv2.5.xnb
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\Sprites_pj\Pj.xml
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Reckless_and_Gun.exe
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Reckless_and_Gun.deps.json
@@ -36,3 +35,4 @@ C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckles
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\obj\Debug\net9.0\Reckless_and_Gun.pdb
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\obj\Debug\net9.0\Reckless_and_Gun.genruntimeconfig.cache
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\obj\Debug\net9.0\ref\Reckless_and_Gun.dll
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\Sprites_pj\movimiento-finalv2.5 (1).xnb
