@@ -4,9 +4,11 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/Sprites_pj/movimiento-finalv2.5 (1).png</File>
+    <File>C:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/Sprites_pj/movimiento-finalv2.5 (1).png</File>
+    <File>C:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/Spritesheet_map/bg_beach.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

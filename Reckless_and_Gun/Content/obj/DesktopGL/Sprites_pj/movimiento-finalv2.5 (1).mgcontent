@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/Sprites_pj/movimiento-finalv2.5 (1).png</SourceFile>
-  <SourceTime>2025-10-28T21:02:19.9236798-03:00</SourceTime>
-  <DestFile>c:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Sprites_pj/movimiento-finalv2.5 (1).xnb</DestFile>
-  <DestTime>2025-10-28T21:19:55.0018894-03:00</DestTime>
+  <SourceFile>c:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/Sprites_pj/movimiento-finalv2.5 (1).png</SourceFile>
+  <SourceTime>2025-10-30T00:03:33.1517398-03:00</SourceTime>
+  <DestFile>c:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Sprites_pj/movimiento-finalv2.5 (1).xnb</DestFile>
+  <DestTime>2025-10-30T00:42:17.4738222-03:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-10-20T11:25:32-03:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
