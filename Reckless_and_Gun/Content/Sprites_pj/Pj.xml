@@ -5,7 +5,6 @@
     <Texture>Sprites_pj/movimiento-finalv2.5 (1)</Texture>
 
     <Regions>
-
         <Region name="David-1" x="0" y="0" width="52" height="74" />
         <Region name="David-2" x="53" y="0" width="65" height="74" />
         <Region name="David-3" x="118" y="0" width="65" height="74" />
@@ -20,11 +19,9 @@
         <Region name="David-12" x="197" y="74" width="57" height="75" />
         <Region name="David-13" x="254" y="74" width="64" height="75" />
         <Region name="David-14" x="318" y="74" width="66" height="75" />
-
     </Regions>
 
     <Animations>
-
         <Animation name="David-walk" delay="100">
             <Frame region="David-2" />
             <Frame region="David-3" />
@@ -39,12 +36,6 @@
             <Frame region="David-12" />
             <Frame region="David-13" />
             <Frame region="David-14" />
-
         </Animation>
-
-
-
     </Animations>
-
 </TextureAtlas>
-

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj": {}
+    "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj": {}
   },
   "projects": {
-    "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj": {
+    "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj",
+        "projectUniqueName": "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj",
         "projectName": "MonoGame Game library",
-        "projectPath": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj",
-        "packagesPath": "C:\\Users\\feder\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\obj\\",
+        "projectPath": "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj",
+        "packagesPath": "C:\\Users\\Alumno\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\feder\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Alumno\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -72,24 +73,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj": {
+    "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj",
+        "projectUniqueName": "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj",
         "projectName": "Reckless_and_Gun",
-        "projectPath": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj",
-        "packagesPath": "C:\\Users\\feder\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\obj\\",
+        "projectPath": "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj",
+        "packagesPath": "C:\\Users\\Alumno\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\feder\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Alumno\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -98,14 +99,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj": {
-                "projectPath": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj"
+              "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj": {
+                "projectPath": "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj"
               }
             }
           }
@@ -151,7 +153,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

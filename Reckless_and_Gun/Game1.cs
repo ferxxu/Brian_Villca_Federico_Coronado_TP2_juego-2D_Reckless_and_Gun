@@ -8,15 +8,13 @@ namespace Reckless_and_Gun;
 
 public class Game1 : Core
 {
-    // texture region that defines the slime sprite in the atlas.
-
     private AnimatedSprite _pj;
     private TextureRegion _bg_beach;
     private Texture2D _beach_texture;
     private Vector2 _velocity_david;
     private Vector2 _position_pj = new Vector2(500, 390);
-    private float _jumpSpeed = -500f;
-    private float _gravity = 1500f;
+    private float _jumpSpeed = -600f;
+    private float _gravity = 1000f;
     private bool _isJumping = false;
     private float _floor = 390f;
 
@@ -41,7 +39,6 @@ public class Game1 : Core
         _pj = atlas.CreateAnimatedSprite("David-walk");
         _pj.Scale = new Vector2(2.0f, 2.0f);
         _pj.Origin = Vector2.Zero;
-
         base.LoadContent();
     }
 
@@ -59,8 +56,8 @@ public class Game1 : Core
 
     private void CheckKeyboardInput(float _deltaTime)
     {
-        if (Input.Keyboard.IsKeyDown(Keys.A)) _position_pj.X -= 1.5f;
-        if (Input.Keyboard.IsKeyDown(Keys.D)) _position_pj.X += 1.5f;
+        if (Input.Keyboard.IsKeyDown(Keys.A)) _position_pj.X -= 6.0f;
+        if (Input.Keyboard.IsKeyDown(Keys.D)) _position_pj.X += 6.0f;
 
         if (Input.Keyboard.WasKeyJustPressed(Keys.J) && !_isJumping)
         {
