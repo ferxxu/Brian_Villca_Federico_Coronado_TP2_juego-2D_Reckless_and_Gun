@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+    <Texture>Sprites_pj/david_Censure</Texture>
+
+    <Regions>
+        <Region name="David-stand-chest" x="0" y="0" width="52" height="45" />
+        <Region name="David-stand-legs"  x="0" y="162" width="34" height="29" />
+
+        <Region name="David-walk1-chest" x="53" y="0" width="65" height="45" />
+        <Region name="David-walk2-chest" x="118" y="0" width="65" height="45" />
+        <Region name="David-walk3-chest" x="183" y="0" width="62" height="45" />
+        <Region name="David-walk4-chest" x="245" y="0" width="57" height="45" />
+        <Region name="David-walk5-chest" x="302" y="0" width="53" height="45" />
+        <Region name="David-walk6-chest" x="355" y="0" width="56" height="45" />
+        <Region name="David-walk7-chest" x="411" y="0" width="62" height="45" />
+        <Region name="David-walk8-chest" x="0" y="74" width="66" height="45" />
+        <Region name="David-walk9-chest" x="66" y="74" width="66" height="45" />
+        <Region name="David-walk10-chest" x="132" y="74" width="65" height="45" />
+        <Region name="David-walk11-chest" x="197" y="74" width="57" height="45" />
+        <Region name="David-walk12-chest" x="254" y="74" width="64" height="45" />
+        <Region name="David-walk13-chest" x="318" y="74" width="66" height="45" />
+        
+        
+        <Region name="David-walk1-legs" x="53" y="45" width="65" height="29" />
+        <Region name="David-walk2-legs" x="118" y="45" width="65" height="29" />
+        <Region name="David-walk3-legs" x="183" y="45" width="62" height="29" />
+        <Region name="David-walk4-legs" x="245" y="45" width="57" height="29" />
+        <Region name="David-walk5-legs" x="302" y="45" width="53" height="29" />
+        <Region name="David-walk6-legs" x="355" y="45" width="56" height="29" />
+        <Region name="David-walk7-legs" x="411" y="45" width="62" height="29" />
+        <Region name="David-walk8-legs" x="0" y="119" width="66" height="29" />
+        <Region name="David-walk9-legs" x="66" y="119" width="66" height="29" />
+        <Region name="David-walk10-legs" x="132" y="119" width="65" height="29" />
+        <Region name="David-walk11-legs" x="197" y="119" width="57" height="29" />
+        <Region name="David-walk12-legs" x="254" y="119" width="64" height="29" />
+        <Region name="David-walk13-legs" x="318" y="119" width="66" height="29" />
+    </Regions>
+
+    <Animations>
+        <!-- Animaciones del Torso (Chest) -->
+        <Animation name="David-stand-chest" delay="100">
+            <Frame region="David-stand-chest" />
+        </Animation>
+        
+        <Animation name="David-walk-chest" delay="100">
+            <Frame region="David-walk1-chest" />
+            <Frame region="David-walk2-chest" />
+            <Frame region="David-walk3-chest" />
+            <Frame region="David-walk4-chest" />
+            <Frame region="David-walk5-chest" />
+            <Frame region="David-walk6-chest" />
+            <Frame region="David-walk7-chest" />
+            <Frame region="David-walk8-chest" />
+            <Frame region="David-walk9-chest" />
+            <Frame region="David-walk10-chest" />
+            <Frame region="David-walk11-chest" />
+            <Frame region="David-walk12-chest" />
+            <Frame region="David-walk13-chest" />
+        </Animation>
+
+        <!-- Animaciones de las Piernas (Legs) -->
+        <Animation name="David-stand-legs" delay="100">
+            <Frame region="David-stand-legs"/>
+        </Animation>
+        
+        <Animation name="David-walk-legs" delay="100">
+            <Frame region="David-walk1-legs" />
+            <Frame region="David-walk2-legs" />
+            <Frame region="David-walk3-legs" />
+            <Frame region="David-walk4-legs" />
+            <Frame region="David-walk5-legs" />
+            <Frame region="David-walk6-legs" />
+            <Frame region="David-walk7-legs" />
+            <Frame region="David-walk8-legs" />
+            <Frame region="David-walk9-legs" />
+            <Frame region="David-walk10-legs" />
+            <Frame region="David-walk11-legs" />
+            <Frame region="David-walk12-legs" />
+            <Frame region="David-walk13-legs" />
+        </Animation>
+    </Animations>
+</TextureAtlas>

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LMZi/R8aC8k=",
+  "dgSpecHash": "F5GzdB7ZyyY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Alumno\\Documents\\monogame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj",
+  "projectFilePath": "C:\\Users\\Alumno\\Desktop\\Nueva carpeta (2)\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Alumno\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.4.1\\monogame.framework.desktopgl.3.8.4.1.nupkg.sha512",
     "C:\\Users\\Alumno\\.nuget\\packages\\monogame.library.openal\\1.24.3.2\\monogame.library.openal.1.24.3.2.nupkg.sha512",

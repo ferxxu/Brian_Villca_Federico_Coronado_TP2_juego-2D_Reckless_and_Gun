@@ -13,7 +13,10 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Sprites_pj/movimiento-finalv2.5 (1).png
+#begin Sprites_pj/david_censure.xml
+/copy:Sprites_pj/david_censure.xml
+
+#begin Sprites_pj/Plantilla_sprites_censura.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,10 +26,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites_pj/movimiento-finalv2.5 (1).png
-
-#begin Sprites_pj/Pj.xml
-/copy:Sprites_pj/Pj.xml
+/build:Sprites_pj/Plantilla_sprites_censura.png
 
 #begin Spritesheet_map/bg_beach.png
 /importer:TextureImporter
