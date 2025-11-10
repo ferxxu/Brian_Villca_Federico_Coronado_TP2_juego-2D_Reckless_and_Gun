@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj": {}
+    "C:\\Users\\brian\\Desktop\\juego\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj": {}
   },
   "projects": {
-    "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj": {
+    "C:\\Users\\brian\\Desktop\\juego\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj",
+        "projectUniqueName": "C:\\Users\\brian\\Desktop\\juego\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj",
         "projectName": "MonoGame Game library",
-        "projectPath": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj",
-        "packagesPath": "C:\\Users\\feder\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\obj\\",
+        "projectPath": "C:\\Users\\brian\\Desktop\\juego\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj",
+        "packagesPath": "C:\\Users\\brian\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\brian\\Desktop\\juego\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\feder\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\brian\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -76,7 +76,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

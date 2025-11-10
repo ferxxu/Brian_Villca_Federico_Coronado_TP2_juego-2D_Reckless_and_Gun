@@ -4,10 +4,10 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/beach_map.png</File>
-    <File>C:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/david.png</File>
-    <File>C:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/font.spritefont</File>
-    <File>C:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/jungle.png</File>
+    <File>C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/beach_map.png</File>
+    <File>C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/david.png</File>
+    <File>C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/font.spritefont</File>
+    <File>C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/jungle.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

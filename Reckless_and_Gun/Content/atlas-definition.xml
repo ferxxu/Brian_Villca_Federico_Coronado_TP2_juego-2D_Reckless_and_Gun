@@ -94,7 +94,7 @@
     <Frame region="torso_jump_4" />
     </Animation>
 
-    <Animation name="shoot-torso" delay="80">
+    <Animation name="shoot-torso" delay="40">
     <Frame region="torso_shoot_0" />
     <Frame region="torso_shoot_1" />
     <Frame region="torso_shoot_2" />
@@ -109,7 +109,7 @@
     <Frame region="torso_shoot_down_4" />
     </Animation>
 
-    <Animation name="shoot-up-torso" delay="80">
+    <Animation name="shoot-up-torso" delay="40">
       <Frame region="torso_shoot_up_0" />
       <Frame region="torso_shoot_up_1" />
       <Frame region="torso_shoot_up_2" />

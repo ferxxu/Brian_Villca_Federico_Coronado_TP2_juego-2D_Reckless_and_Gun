@@ -1,4 +1,3 @@
-C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\Sprites_pj\movimiento-finalv2.5.xnb
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\Sprites_pj\Pj.xml
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Reckless_and_Gun.exe
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Reckless_and_Gun.deps.json
@@ -80,3 +79,10 @@ C:\Users\feder\OneDrive\Documentos\MonoGame\Brian_Villca_Federico_Coronado_TP2_j
 C:\Users\feder\OneDrive\Documentos\MonoGame\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\font.xnb
 C:\Users\feder\OneDrive\Documentos\MonoGame\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\jungle.xnb
 C:\Users\feder\OneDrive\Documentos\MonoGame\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\TiledSharp.dll
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\atlas-definition.xml
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\beach_map.tmx
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\beach_map.xnb
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\david.xnb
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\font.xnb
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\jungle.xnb
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\TiledSharp.dll
