@@ -131,9 +131,21 @@
           "lib/netcoreapp2.0/_._": {}
         }
       },
+      "TiledSharp/1.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/TiledSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/TiledSharp.dll": {}
+        }
+      },
       "MonoGame Game library/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "TiledSharp": "1.0.1"
+        },
         "compile": {
           "bin/placeholder/MonoGame Game library.dll": {}
         },
@@ -297,6 +309,18 @@
         "version.txt"
       ]
     },
+    "TiledSharp/1.0.1": {
+      "sha512": "nY88Ux4Yj4aQ1QEP54KZwQ/QMrXSplGpqOxhab6SgkRminHv0PCrwZ9XBfFj0XSgy9omVFIeFrkig9ldXPKp3g==",
+      "type": "package",
+      "path": "tiledsharp/1.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/TiledSharp.dll",
+        "tiledsharp.1.0.1.nupkg.sha512",
+        "tiledsharp.nuspec"
+      ]
+    },
     "MonoGame Game library/1.0.0": {
       "type": "project",
       "path": "../MonoGame Game library/MonoGame Game library.csproj",
@@ -311,23 +335,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\brian\\.nuget\\packages\\": {},
+    "C:\\Users\\feder\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\brian\\Desktop\\juego\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj",
+      "projectUniqueName": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj",
       "projectName": "Reckless_and_Gun",
-      "projectPath": "C:\\Users\\brian\\Desktop\\juego\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj",
-      "packagesPath": "C:\\Users\\brian\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\brian\\Desktop\\juego\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\obj\\",
+      "projectPath": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\Reckless_and_Gun.csproj",
+      "packagesPath": "C:\\Users\\feder\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\Reckless_and_Gun\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\brian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\feder\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -342,8 +366,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\brian\\Desktop\\juego\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj": {
-              "projectPath": "C:\\Users\\brian\\Desktop\\juego\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj"
+            "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj": {
+              "projectPath": "C:\\Users\\feder\\OneDrive\\Documentos\\MonoGame\\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\\MonoGame Game library\\MonoGame Game library.csproj"
             }
           }
         }
@@ -358,7 +382,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -389,7 +413,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

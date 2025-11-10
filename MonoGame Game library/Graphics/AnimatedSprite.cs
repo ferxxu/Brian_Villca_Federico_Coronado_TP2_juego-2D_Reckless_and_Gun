@@ -1,59 +1,72 @@
 using System;
+using System.Collections.Generic; // <-- ¡IMPORTANTE! Necesario para Dictionary
 using Microsoft.Xna.Framework;
+using MonoGameLibrary.Graphics;
 
 namespace MonoGameLibrary.Graphics;
 
-public class AnimatedSprite : Sprite 
+public class AnimatedSprite : Sprite
 {
-private int _currentFrame;
-private TimeSpan _elapsed;
-private Animation _animation;
+    private int _currentFrame;
+    private TimeSpan _elapsed;
+    private Animation _currentAnimation;
+    private Dictionary<string, Animation> _animations;
+    public string CurrentAnimationName => _currentAnimation?.Name;
 
-/// <summary>
-/// Gets or Sets the animation for this animated sprite.
-/// </summary>
-public Animation Animation
-{
-    get => _animation;
-    set
+    public AnimatedSprite()
     {
-        _animation = value;
-        Region = _animation.Frames[0];
+        _animations = new Dictionary<string, Animation>();
     }
-}
-/// <summary>
-/// Creates a new animated sprite.
-/// </summary>
-public AnimatedSprite() { }
 
-/// <summary>
-/// Creates a new animated sprite with the specified frames and delay.
-/// </summary>
-/// <param name="animation">The animation for this animated sprite.</param>
-public AnimatedSprite(Animation animation)
-{
-    Animation = animation;
-}
-/// <summary>
-/// Updates this animated sprite.
-/// </summary>
-/// <param name="gameTime">A snapshot of the game timing values provided by the framework.</param>
-public void Update(GameTime gameTime)
-{
-    _elapsed += gameTime.ElapsedGameTime;
-
-    if (_elapsed >= _animation.Delay)
+    public void AddAnimation(string name, Animation animation)
     {
-        _elapsed -= _animation.Delay;
-        _currentFrame++;
+        _animations[name] = animation;
 
-        if (_currentFrame >= _animation.Frames.Count)
+        if (_currentAnimation == null)
         {
-            _currentFrame = 0;
+            Play(name);
+        }
+    }
+
+    public void Play(string name)
+    {
+        if (CurrentAnimationName == name)
+        {
+            return; 
         }
 
-        Region = _animation.Frames[_currentFrame];
-    }
-}
+        if (!_animations.ContainsKey(name))
+        {
+            Console.WriteLine($"Error: No se encontró la animación '{name}'");
+            return; 
+        }
 
+        _currentAnimation = _animations[name];
+        _currentFrame = 0;
+        _elapsed = TimeSpan.Zero;
+
+        if (_currentAnimation.Frames.Count > 0)
+        {
+            Region = _currentAnimation.Frames[0];
+        }
+    }
+    public void Update(GameTime gameTime)
+    {
+        if (_currentAnimation == null) return;
+
+        _elapsed += gameTime.ElapsedGameTime;
+
+        if (_elapsed >= _currentAnimation.Delay)
+        {
+            _elapsed -= _currentAnimation.Delay;
+            _currentFrame++;
+
+            if (_currentFrame >= _currentAnimation.Frames.Count)
+            {
+                _currentFrame = 0;
+            }
+
+            Region = _currentAnimation.Frames[_currentFrame];
+        }
+    }
 }
