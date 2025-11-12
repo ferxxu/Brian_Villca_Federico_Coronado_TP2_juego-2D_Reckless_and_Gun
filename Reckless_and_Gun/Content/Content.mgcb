@@ -13,9 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin atlas-definition.xml
-/copy:atlas-definition.xml
-
 #begin beach_map.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -31,7 +28,7 @@
 #begin beach_map.tmx
 /copy:beach_map.tmx
 
-#begin david.png
+#begin david_edited.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -41,7 +38,10 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:david.png
+/build:david_edited.png
+
+#begin david.xml
+/copy:david.xml
 
 #begin font.spritefont
 /importer:FontDescriptionImporter

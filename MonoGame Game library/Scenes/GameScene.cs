@@ -65,14 +65,11 @@ public class GameScene : Scene
  	public override void LoadContent()
  	{
  		_background = Content.Load<Texture2D>("beach_map");
- 		TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "atlas-definition.xml");
+ 		TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "david.xml");
  		_davidChest = atlas.CreateAnimatedSprite("idle-torso");
  		_davidLegs = atlas.CreateAnimatedSprite("idle-legs");
  		_davidLegs.Scale = new Vector2(2.0f, 2.0f);
  		_davidChest.Scale = new Vector2(2.0f, 2.0f);
- 		
- 		_davidLegs.Origin = new Vector2(_davidLegs.Region.Width / 2f, 0f); 
- 		_davidChest.Origin = new Vector2(_davidChest.Region.Width / 2f, _davidChest.Region.Height); 
 
  		_constLegsHeight = _davidLegs.Region.Height * _davidLegs.Scale.Y;
  		_constTorsoHeight = _davidChest.Region.Height * _davidChest.Scale.Y;
@@ -111,8 +108,13 @@ public class GameScene : Scene
  		_davidChest.Play(_chestState);
 
  		_davidLegs.Update(gameTime);
- 		_davidChest.Update(gameTime);
-
+ 		_davidChest.Update(gameTime);// --- AÑADE ESTO AQUÍ O ASEGÚRATE DE QUE ESTÉ ASÍ ---
+        // Estas líneas ajustan el punto de pivote (Origen) de cada sprite
+        // para que su "cintura" esté en la posición _position_pj.
+        // Se llaman en cada Update() para adaptarse al tamaño actual de la animación.
+        _davidLegs.Origin = new Vector2(_davidLegs.Region.Width / 2f, 0f); 
+        _davidChest.Origin = new Vector2(_davidChest.Region.Width / 2f, _davidChest.Region.Height); 
+        // --- FIN DEL BLOQUE DE ORIGEN ---
  		_camera.Follow(_position_pj, _roomBounds, Core.GraphicsDevice.Viewport);
  		base.Update(gameTime);
  	}
@@ -176,75 +178,93 @@ public class GameScene : Scene
  	}
 
  	// --- LOS MÚSCULOS (FÍSICA) ---
- 	private void ApplyPhysics(GameTime gameTime)
- 	{
- 		float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+private void ApplyPhysics(GameTime gameTime)
+    {
+        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
- 		// --- 1. APLICAR GRAVEDAD ---
- 		_velocity_pj.Y += _gravity * deltaTime;
- 		_velocity_pj.Y = MathHelper.Clamp(_velocity_pj.Y, -_jumpSpeed * 2, _gravity * 2f);
- 		
- 		// --- 2. APLICAR MOVIMIENTO X (CAMINAR) ---
- 		if (isMovingHorizontally)
- 		{
- 			_velocity_pj.X = (_davidLegs.Effects == SpriteEffects.FlipHorizontally) ? -_speed : _speed;
- 		}
- 		else
- 		{
- 			_velocity_pj.X = 0;
- 		}
- 		
- 		// --- 3. APLICAR MOVIMIENTO (AMBOS EJES) ---
- 		_position_pj.X += _velocity_pj.X * deltaTime;
- 		_position_pj.Y += _velocity_pj.Y * deltaTime;
- 		
- 		UpdateHitbox(); 
+        // --- 1. APLICAR GRAVEDAD ---
+        _velocity_pj.Y += _gravity * deltaTime;
+        _velocity_pj.Y = MathHelper.Clamp(_velocity_pj.Y, -_jumpSpeed * 2, _gravity * 2f);
 
- 		// --- 4. LÓGICA DE ATERRIZAJE ---
- 		
- 		// Asumimos que estamos en el aire...
- 		_isJumping = true; 
+        // --- 2. APLICAR MOVIMIENTO X (CAMINAR) ---
+        if (isMovingHorizontally)
+        {
+            _velocity_pj.X = (_davidLegs.Effects == SpriteEffects.FlipHorizontally) ? -_speed : _speed;
+        }
+        else
+        {
+            _velocity_pj.X = 0;
+        }
 
- 		// ... a menos que demostremos lo contrario.
- 		// ¿Estamos chocando con el suelo Y veníamos cayendo?
- 		if (_davidHitbox.Intersects(_debugSuelo) && _velocity_pj.Y >= 0)
- 		{
- 			// --- ¡SÍ, HEMOS ATERRIZADO! ---
- 			
- 			// 1. Detenemos la caída
- 			_velocity_pj.Y = 0; 
- 			
- 			// 2. Corregimos la posición (LA LÍNEA MÁGICA)
- 			// Posicionamos la CINTURA para que los PIES estén 1 PÍXEL DENTRO del suelo.
- 			_position_pj.Y = (_debugSuelo.Top - _constLegsHeight) + 1; 
- 			
- 			// 3. Informamos al sistema que estamos en el suelo
- 			_isJumping = false; 
- 			
- 			// 4. Actualizamos la hitbox a la posición final corregida
- 			UpdateHitbox();
- 		}
- 	}
+        // --- 3. APLICAR MOVIMIENTO (AMBOS EJES) ---
+        _position_pj.X += _velocity_pj.X * deltaTime;
+        _position_pj.Y += _velocity_pj.Y * deltaTime;
+
+        UpdateHitbox();
+
+        // --- 4. LÓGICA DE ATERRIZAJE ---
+
+        bool isGrounded = false;
+
+        // ¿Estamos chocando con el suelo Y veníamos cayendo?
+        // (Usamos _collisionRects en lugar de _debugSuelo)
+        foreach (Rectangle rect in _collisionRects)
+        {
+            if (_davidHitbox.Intersects(rect) && _velocity_pj.Y >= 0)
+            {
+                // --- ¡SÍ, HEMOS ATERRIZADO! ---
+                isGrounded = true;
+                _velocity_pj.Y = 0;
+
+                // CORRECCIÓN 3 (Pegado): 
+                // Pegamos los PIES de la hitbox al TOPE del suelo
+                _position_pj.Y = rect.Top - _constLegsHeight + 1;
+
+                UpdateHitbox();
+                break; // Salimos del bucle, ya encontramos suelo
+            }
+        }
+
+        // Finalmente, actualizamos el estado de salto
+        _isJumping = !isGrounded;
+    }
 
  	// --- HITBOX (Usa constantes para evitar vibraciones) ---
- 	private void UpdateHitbox()
- 	{
- 		_davidHitbox.Width = (int)_constHitboxWidth;
- 		
- 		if (isDucking)
- 		{
- 			_davidHitbox.Height = (int)(_constTorsoHeight + (_constLegsHeight * 0.6f));
- 		}
- 		else
- 		{
- 			_davidHitbox.Height = (int)_constHitboxHeight;
- 		}
+ 	// --- HITBOX (Usa constantes para evitar vibraciones) ---
+    // --- HITBOX (Corregido para anclar los pies al suelo) ---
+   // --- HITBOX (Corregido para ser 100% dinámico) ---
+    // --- HITBOX (Con ancho de idle-legs, se corregirá más tarde) ---
+    private void UpdateHitbox()
+    {
+        // Usamos el ancho constante de idle-legs, como pediste
+        _davidHitbox.Width = (int)_constHitboxWidth;
 
- 		_davidHitbox.X = (int)(_position_pj.X - (_davidHitbox.Width / 2));
- 		_davidHitbox.Y = (int)(_position_pj.Y - _constTorsoHeight);
- 	}
+        // --- 1. Calcular la ALTURA TOTAL primero ---
+        if (isDucking)
+        {
+            // Cuando se agacha, la altura total es el torso + un % de las piernas.
+            // ¡Es posible que tengas que ajustar este 0.6f!
+            _davidHitbox.Height = (int)(_constTorsoHeight + (_constLegsHeight * 0.6f));
+        }
+        else
+        {
+            // Altura normal (parado o saltando)
+            _davidHitbox.Height = (int)_constHitboxHeight;
+        }
 
- 	// --- ANIMACIONES (Dependen de _isJumping) ---
+        // --- 2. Calcular X (centrado en la cintura) ---
+        _davidHitbox.X = (int)(_position_pj.X - (_davidHitbox.Width / 2f));
+        
+        // --- 3. Calcular Y (basado en los pies) ---
+        // La posición de los pies (la base) SIEMPRE se calcula con la
+        // altura de las piernas DE PIE (_constLegsHeight),
+        // porque tu 'snap' en ApplyPhysics usa esa constante para fijar la cintura.
+        float feetY = _position_pj.Y + _constLegsHeight; 
+        
+        // El "techo" de la hitbox es la posición de los pies MENOS la altura total (que sí cambia).
+        // Si Height es más chico (agachado), Y bajará (se acerca al suelo).
+        _davidHitbox.Y = (int)(feetY - _davidHitbox.Height);
+    }
  	public void handleChestAnimation()
  	{
  		if (_isJumping) { _chestState = "jump-torso"; }
@@ -285,24 +305,52 @@ public class GameScene : Scene
  	}
 
  	public override void Draw(GameTime gameTime)
- 	{
- 		Core.GraphicsDevice.Clear(Color.Black);
+    {
+        Core.GraphicsDevice.Clear(Color.Black);
 
- 		Core.SpriteBatch.Begin(
- 			samplerState: SamplerState.PointClamp,
- 			transformMatrix: _camera.GetViewMatrix(Core.GraphicsDevice.Viewport)
- 		);
+        Core.SpriteBatch.Begin(
+            samplerState: SamplerState.PointClamp,
+            transformMatrix: _camera.GetViewMatrix(Core.GraphicsDevice.Viewport)
+        );
 
- 		Core.SpriteBatch.Draw(_background, Vector2.Zero, Color.White);
+        Core.SpriteBatch.Draw(_background, Vector2.Zero, Color.White);
 
- 		_davidLegs.Draw(Core.SpriteBatch, _position_pj);
- 		_davidChest.Draw(Core.SpriteBatch, _position_pj);
+        // La posición base es siempre la cintura del personaje.
+        Vector2 finalDrawPosition = _position_pj;
 
- 		// --- DIBUJO DE DEBUG ---
- 		DibujarBordeRectangulo(_davidHitbox, Color.Cyan, 2); 
- 		DibujarBordeRectangulo(_debugSuelo, Color.LimeGreen, 3);
- 		// --- FIN CÓDIGO DEBUG ---
+        // Si está agachado, necesitamos "mover" el punto de dibujo hacia abajo
+        // para compensar que el sprite de piernas agachadas es visualmente más corto.
+        if (isDucking)
+        {
+            float scaledStandingLegsHeight = _constLegsHeight;
+            float scaledDuckingLegsVisualHeight = _constLegsHeight * 0.6f; // Asegúrate que este 0.6f sea el mismo que en UpdateHitbox
+            float yOffset = scaledStandingLegsHeight - scaledDuckingLegsVisualHeight;
+            finalDrawPosition.Y += yOffset;
+        }
 
- 		Core.SpriteBatch.End();
- 	}
+        // --- DIBUJO DE LAS PIERNAS (no necesita ajuste horizontal) ---
+        _davidLegs.Draw(Core.SpriteBatch, finalDrawPosition);
+        
+        // --- DIBUJO DEL TORSO CON AJUSTE HORIZONTAL ---
+        // Aquí ajustaremos la posición X del torso.
+        // Prueba con diferentes valores para `xOffsetAdjustment`
+        // hasta que el torso se vea perfectamente alineado con las piernas.
+        // Si el torso necesita moverse a la DERECHA, el valor es POSITIVO.
+        // Si el torso necesita moverse a la IZQUIERDA, el valor es NEGATIVO.
+        
+        float xOffsetAdjustment = 25.0f; // <-- PRUEBA A CAMBIAR ESTE VALOR (ej: 0.0f, 2.0f, -3.0f, etc.)
+        
+        Vector2 chestDrawPosition = new Vector2(finalDrawPosition.X + xOffsetAdjustment, finalDrawPosition.Y);
+        
+        _davidChest.Draw(Core.SpriteBatch, chestDrawPosition);
+        
+        // --- FIN DEL AJUSTE ---
+
+        // --- DIBUJO DE DEBUG (para la hitbox) ---
+        DibujarBordeRectangulo(_davidHitbox, Color.Cyan, 2); 
+        DibujarBordeRectangulo(_debugSuelo, Color.LimeGreen, 3);
+        // --- FIN CÓDIGO DEBUG ---
+
+        Core.SpriteBatch.End();
+    }
 }

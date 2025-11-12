@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Reckless_and_Gun")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d2c83c3f6f4f0f7c6f52c4c35bb9602c55aad6b0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+915937e66ff39decae6a119437ff48e1f6f432f0")]
 [assembly: System.Reflection.AssemblyProductAttribute("Reckless_and_Gun")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Reckless_and_Gun")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

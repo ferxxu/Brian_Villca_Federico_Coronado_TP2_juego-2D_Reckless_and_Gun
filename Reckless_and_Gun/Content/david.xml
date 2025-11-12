@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TextureAtlas>
 
-<Texture>david</Texture>
+<Texture>david_edited</Texture>
     <Regions>
     <Region name="torso_idle_0" x="7" y="2" width="44" height="43" />
      <Region name="torso_run_0" x="7" y="2" width="44" height="43" />
@@ -28,8 +28,8 @@
      <Region name="torso_shoot_up_3" x="203" y="88" width="23" height="73" />
      <Region name="torso_shoot_up_4" x="226" y="93" width="23" height="68" />
      <Region name="torso_shoot_up_5" x="249" y="92" width="23" height="69" />
-     <Region name="torso_duck_shoot_0" x="5" y="229" width="47" height="45"/>    
-     <Region name="torso_duck_shoot_1" x="55" y="241" width="42" height="42" />
+     <Region name="torso_duck_0" x="0" y="229" width="44" height="45"/>    
+     <Region name="torso_duck_1" x="45" y="241" width="41" height="45" />
      <Region name="torso_duck_shoot_2" x="100" y="241" width="42" height="42" />
      <Region name="torso_duck_shoot_3" x="145" y="241" width="53" height="43" />
      <Region name="torso_duck_shoot_4" x="201" y="241" width="58" height="43" />
@@ -55,8 +55,8 @@
     <Region name="legs_run_11" x="409" y="161" width="28" height="30" />
     <Region name="legs_run_12" x="437" y="163" width="35" height="28" />
     <Region name="legs_run_13" x="472" y="161" width="38" height="30" />
-    <Region name="legs_duck_shoot_0" x="0" y="298" width="28" height="26" />
-    <Region name="legs_duck_shoot_1" x="30" y="303" width="27" height="21" />
+    <Region name="legs_duck_0" x="0" y="280" width="27" height="25" />
+    <Region name="legs_duck_1" x="28" y="284" width="26" height="20" />
     <Region name="legs_duck_shoot_2" x="58" y="304" width="27" height="21" />
     <Region name="legs_duck_shoot_3" x="86" y="304" width="27" height="21" />
     <Region name="legs_duck_shoot_4" x="113" y="304" width="27" height="21" />
@@ -119,8 +119,8 @@
     </Animation>
 
     <Animation name="duck-shoot-torso" delay="80">
-      <Frame region="torso_duck_shoot_0" />
-      <Frame region="torso_duck_shoot_1" />
+      <Frame region="torso_duck_0" />
+      <Frame region="torso_duck_1" />
       <Frame region="torso_duck_shoot_2" />
       <Frame region="torso_duck_shoot_3" />
       <Frame region="torso_duck_shoot_4" />
@@ -136,7 +136,8 @@
     </Animation>
 
     <Animation name="duck-torso" delay="100">
-      <Frame region="torso_duck_shoot_0" />
+      <Frame region="torso_duck_0" />
+      <Frame region="torso_duck_1" />
     </Animation>
 
     <Animation name="idle-legs" delay="80">
@@ -170,8 +171,8 @@
     </Animation>
 
     <Animation name="duck-shoot-legs" delay="80">
-    <Frame region="legs_duck_shoot_0" />
-      <Frame region="legs_duck_shoot_1" />
+    <Frame region="legs_duck_0" />
+      <Frame region="legs_duck_1" />
       <Frame region="legs_duck_shoot_2" />
       <Frame region="legs_duck_shoot_3" />
       <Frame region="legs_duck_shoot_4" />
@@ -187,7 +188,8 @@
     </Animation>
 
     <Animation name="duck-legs" delay="100">
-      <Frame region="legs_duck_shoot_0" />
+      <Frame region="legs_duck_0" />
+      <Frame region="legs_duck_1" />
     </Animation>
     </Animations>
 </TextureAtlas>
