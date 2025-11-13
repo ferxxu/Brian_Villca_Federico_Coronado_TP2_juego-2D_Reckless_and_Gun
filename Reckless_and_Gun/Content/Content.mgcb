@@ -28,7 +28,7 @@
 #begin beach_map.tmx
 /copy:beach_map.tmx
 
-#begin david_editedv2 (1).png
+#begin david_edited_censure.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -38,10 +38,10 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:david_editedv2 (1).png
+/build:david_edited_censure.png
 
-#begin david1.xml
-/copy:david1.xml
+#begin david2.xml
+/copy:david2.xml
 
 #begin font.spritefont
 /importer:FontDescriptionImporter

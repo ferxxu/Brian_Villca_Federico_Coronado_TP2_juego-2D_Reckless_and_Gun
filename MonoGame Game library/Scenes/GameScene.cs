@@ -69,7 +69,7 @@ public class GameScene : Scene
     public override void LoadContent()
     {
         _background = Content.Load<Texture2D>("beach_map");
-        TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "david1.xml"); // Asegúrate que el XML se llame 'david.xml'
+        TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "david2.xml"); // Asegúrate que el XML se llame 'david.xml'
         _davidChest = atlas.CreateAnimatedSprite("idle-torso");
         _davidLegs = atlas.CreateAnimatedSprite("idle-legs");
         _davidLegs.Scale = new Vector2(2.0f, 2.0f);
@@ -88,9 +88,9 @@ public class GameScene : Scene
 
         _torsoFrameOffsets = new Dictionary<string, Vector2>()
         {
-            { "torso_idle_0", new Vector2(6f, 0f) }, // <- Tu base
-            { "torso_run_0", new Vector2(6f, 0f) },
-            { "torso_run_1", new Vector2(6f, 0f) },
+            { "torso_idle_0", new Vector2(0f, 0f) }, // <- Tu base
+            { "torso_run_0", new Vector2(0f, 0f) },
+            { "torso_run_1", new Vector2(0f, 0f) },
             { "torso_jump_0", new Vector2(0f, 0f) },
             { "torso_jump_1", new Vector2(0f, 0f) },
             { "torso_jump_2", new Vector2(0f, 0f) },
@@ -105,18 +105,18 @@ public class GameScene : Scene
             { "torso_shoot_down_2", new Vector2(0f, 0f) },
             { "torso_shoot_down_3", new Vector2(0f, 0f) },
             { "torso_shoot_down_4", new Vector2(0f, 0f) },
+            { "torso_up_0", new Vector2(0f, -3f) },
             { "torso_shoot_up_0", new Vector2(0f, 0f) },
             { "torso_shoot_up_1", new Vector2(0f, 0f) },
             { "torso_shoot_up_2", new Vector2(0f, 0f) },
             { "torso_shoot_up_3", new Vector2(0f, 0f) },
             { "torso_shoot_up_4", new Vector2(0f, 0f) },
-            { "torso_shoot_up_5", new Vector2(0f, 0f) },
+            { "torso_duck_Animated_0", new Vector2(0f, 0f) },
+            { "torso_duck_Animated_1", new Vector2(0f, 0f) },
             { "torso_duck_0", new Vector2(0f, 0f) },
-            { "torso_duck_1", new Vector2(0f, 0f) },
+            { "torso_duck_shoot_0", new Vector2(0f, 0f) },
+            { "torso_duck_shoot_1", new Vector2(0f, 0f) },
             { "torso_duck_shoot_2", new Vector2(0f, 0f) },
-            { "torso_duck_shoot_3", new Vector2(0f, 0f) },
-            { "torso_duck_shoot_4", new Vector2(0f, 0f) },
-            { "torso_duck_shoot_5", new Vector2(0f, 0f) },
             { "torso_duck_walk_0", new Vector2(0f, 0f) },
             { "torso_duck_walk_1", new Vector2(0f, 0f) },
             { "torso_duck_walk_2", new Vector2(0f, 0f) },
@@ -127,10 +127,10 @@ public class GameScene : Scene
         _legsFrameOffsets = new Dictionary<string, Vector2>()
         {
             { "legs_idle_0", new Vector2(0f, 0f) }, // <- Tu base
-            { "legs_run_0", new Vector2(-6f, 0f) },
-            { "legs_run_1", new Vector2(-5f, 0f) },
-            { "legs_run_2", new Vector2(-3f, 0f) },
-            { "legs_run_3", new Vector2(3f, 0f) },
+            { "legs_run_0", new Vector2(0f, 0f) },
+            { "legs_run_1", new Vector2(0f, 0f) },
+            { "legs_run_2", new Vector2(0f, 0f) },
+            { "legs_run_3", new Vector2(0f, 0f) },
             { "legs_run_4", new Vector2(0f, 0f) },
             { "legs_run_5", new Vector2(0f, 0f) },
             { "legs_run_6", new Vector2(0f, 0f) },
@@ -368,7 +368,6 @@ public class GameScene : Scene
         _davidChest.Draw(Core.SpriteBatch, chestDrawPos);
         
         // --- DIBUJO DE DEBUG ---
-        DibujarBordeRectangulo(_davidHitbox, Color.Cyan, 2); 
         DibujarBordeRectangulo(_debugSuelo, Color.LimeGreen, 3);
 
         Core.SpriteBatch.End();
