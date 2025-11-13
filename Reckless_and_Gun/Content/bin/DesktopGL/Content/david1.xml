@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TextureAtlas>
 
-<Texture>david_edited</Texture>
+<Texture>david_editedv2 (1)</Texture>
     <Regions>
      <Region name="torso_idle_0" x="7" y="2" width="45" height="43" />
-     <Region name="torso_run_0" x="52" y="1" width="53" height="43" />
+     <Region name="torso_run_0" x="52" y="2" width="53" height="43" />
      <Region name="torso_run_1" x="105" y="2" width="53" height="43" />
      <Region name="torso_jump_0" x="158" y="2" width="44" height="43" />
      <Region name="torso_jump_1" x="202" y="2" width="44" height="43" />
@@ -76,7 +76,7 @@
   <Frame region="torso_idle_0" />
   </Animation>
 
-    <Animation name="run-torso" delay="300">
+    <Animation name="run-torso" delay="200">
     <Frame region="torso_run_0" />
     <Frame region="torso_run_1" />
 
@@ -140,7 +140,7 @@
      <Frame region="legs_idle_0" />  
     </Animation>
 
-   <Animation name="run-legs" delay="1000">
+   <Animation name="run-legs" delay="80">
       <Frame region="legs_run_0" />
       <Frame region="legs_run_1" />
       <Frame region="legs_run_2" />

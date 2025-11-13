@@ -3,11 +3,9 @@
 
 <Texture>david_edited</Texture>
     <Regions>
-    <Region name="torso_idle_0" x="7" y="2" width="44" height="43" />
-     <Region name="torso_run_0" x="7" y="2" width="44" height="43" />
-     <Region name="torso_run_1" x="52" y="1" width="54" height="44" />
-     <Region name="torso_run_2" x="105" y="2" width="53" height="43" />
-     <Region name="torso_run_3" x="7" y="2" width="44" height="43" />
+     <Region name="torso_idle_0" x="7" y="2" width="45" height="43" />
+     <Region name="torso_run_0" x="52" y="1" width="53" height="43" />
+     <Region name="torso_run_1" x="105" y="2" width="53" height="43" />
      <Region name="torso_jump_0" x="158" y="2" width="44" height="43" />
      <Region name="torso_jump_1" x="202" y="2" width="44" height="43" />
      <Region name="torso_jump_2" x="246" y="2" width="42" height="43" />
@@ -40,21 +38,20 @@
      <Region name="torso_duck_walk_3" x="448" y="245" width="42" height="41" />
      <Region name="torso_duck_walk_4" x="492" y="245" width="42" height="41" />
     
-    <Region name="legs_idle_0" x="0" y="162" width="35" height="29" />  
-    <Region name="legs_run_0" x="0" y="162" width="35" height="29" />
-    <Region name="legs_run_1" x="35" y="161" width="44" height="30" />
-    <Region name="legs_run_2" x="80" y="162" width="50" height="29" />
-    <Region name="legs_run_3" x="130" y="163" width="43" height="28" />
-    <Region name="legs_run_4" x="173" y="161" width="28" height="30" />
-    <Region name="legs_run_5" x="201" y="161" width="19" height="30" />
-    <Region name="legs_run_6" x="220" y="161" width="24" height="30" />
-    <Region name="legs_run_7" x="224" y="162" width="32" height="29" />
-    <Region name="legs_run_8" x="276" y="162" width="38" height="29" />
-    <Region name="legs_run_9" x="314" y="161" width="45" height="30" />
-    <Region name="legs_run_10" x="359" y="164" width="50" height="27" />
-    <Region name="legs_run_11" x="409" y="161" width="28" height="30" />
-    <Region name="legs_run_12" x="437" y="163" width="35" height="28" />
-    <Region name="legs_run_13" x="472" y="161" width="38" height="30" />
+    <Region name="legs_idle_0" x="0" y="161" width="35" height="29" />  
+    <Region name="legs_run_0" x="35" y="161" width="45" height="30" />
+    <Region name="legs_run_1" x="80" y="161" width="50" height="30" />
+    <Region name="legs_run_2" x="130" y="161" width="43" height="30" />
+    <Region name="legs_run_3" x="173" y="161" width="28" height="30" />
+    <Region name="legs_run_4" x="201" y="161" width="19" height="30" />
+    <Region name="legs_run_5" x="221" y="161" width="23" height="30" />
+    <Region name="legs_run_6" x="244" y="161" width="32" height="30" />
+    <Region name="legs_run_7" x="276" y="161" width="38" height="30" />
+    <Region name="legs_run_8" x="314" y="161" width="45" height="30" />
+    <Region name="legs_run_9" x="359" y="161" width="50" height="30" />
+    <Region name="legs_run_10" x="409" y="161" width="28" height="30" />
+    <Region name="legs_run_11" x="437" y="161" width="35" height="30" />
+    <Region name="legs_run_12" x="472" y="161" width="38" height="30" />
     <Region name="legs_duck_0" x="0" y="280" width="27" height="25" />
     <Region name="legs_duck_1" x="28" y="284" width="26" height="20" />
     <Region name="legs_duck_shoot_2" x="58" y="304" width="27" height="21" />
@@ -79,11 +76,10 @@
   <Frame region="torso_idle_0" />
   </Animation>
 
-    <Animation name="run-torso" delay="100">
+    <Animation name="run-torso" delay="300">
     <Frame region="torso_run_0" />
     <Frame region="torso_run_1" />
-    <Frame region="torso_run_2" />
-    <Frame region="torso_run_3" />
+
     </Animation>
 
     <Animation name="jump-torso" delay="100">
@@ -144,7 +140,7 @@
      <Frame region="legs_idle_0" />  
     </Animation>
 
-   <Animation name="run-legs" delay="80">
+   <Animation name="run-legs" delay="1000">
       <Frame region="legs_run_0" />
       <Frame region="legs_run_1" />
       <Frame region="legs_run_2" />
@@ -158,7 +154,6 @@
       <Frame region="legs_run_10" />
       <Frame region="legs_run_11"/>
       <Frame region="legs_run_12" />
-      <Frame region="legs_run_13" />1
   </Animation>
 
     <Animation name="jump-legs" delay="80">

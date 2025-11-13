@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic; // <-- ¡IMPORTANTE! Necesario para Dictionary
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGameLibrary.Graphics;
 
@@ -48,6 +48,7 @@ public class AnimatedSprite : Sprite
         if (_currentAnimation.Frames.Count > 0)
         {
             Region = _currentAnimation.Frames[0];
+            // NOTA: El 'Origin' base se establece en GameScene.cs
         }
     }
     public void Update(GameTime gameTime)
@@ -67,6 +68,7 @@ public class AnimatedSprite : Sprite
             }
 
             Region = _currentAnimation.Frames[_currentFrame];
+            // NOTA: El 'Origin' base se establece en GameScene.cs
         }
     }
 }
