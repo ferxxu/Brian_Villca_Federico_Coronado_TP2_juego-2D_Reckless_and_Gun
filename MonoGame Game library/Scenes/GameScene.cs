@@ -16,7 +16,7 @@ public class GameScene : Scene
 {
     // --- Variables de Escena ---
     private Camera2D _camera;
-    private List<Rectangle> _collisionRects; 
+    private List<Rectangle> _collisionRects;
     private Texture2D _background;
     private Rectangle _roomBounds;
 
@@ -40,7 +40,7 @@ public class GameScene : Scene
 
     // --- Variables de Debug ---
     private Texture2D _texturaDebug;
-    private Rectangle _debugSuelo; 
+    private Rectangle _debugSuelo;
 
     // --- Variables de Estado (FSM) ---
     private string _legState = "idle-legs";
@@ -49,12 +49,21 @@ public class GameScene : Scene
     private bool isDucking;
     private bool isShooting;
     private bool isMovingHorizontally;
-    private bool isAimingUp; 
+    private bool isAimingUp;
 
     // --- Constantes de Física ---
     private const float _speed = 150f;
     private const float _jumpSpeed = -500f; // Negativo (hacia arriba)
     private const float _gravity = 1500f;
+    // Enemigo 1:
+
+    private Rectangle _spiderHitbox;
+    private AnimatedSprite _spiderAnimation;
+    private Vector2 _spiderPosition;
+    private Vector2 _spiderVelocity;
+    private float _spiderWidth;
+    private float _spiderHeight;
+
 
     public override void Initialize()
     {
@@ -64,20 +73,29 @@ public class GameScene : Scene
         _camera = new Camera2D();
         _camera.Zoom = 1.0f;
         _isJumping = true; // Empieza en el aire
+        _spiderVelocity = Vector2.Zero;
     }
 
     public override void LoadContent()
     {
         _background = Content.Load<Texture2D>("beach_map");
+
         TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "david2.xml"); // Asegúrate que el XML se llame 'david.xml'
+
+        TextureAtlas atlasSpider = TextureAtlas.FromFile(Core.Content, "spider.xml");
+
         _davidChest = atlas.CreateAnimatedSprite("idle-torso");
         _davidLegs = atlas.CreateAnimatedSprite("idle-legs");
+        _spiderAnimation = atlasSpider.CreateAnimatedSprite("spider_walking");
         _davidLegs.Scale = new Vector2(2.0f, 2.0f);
         _davidChest.Scale = new Vector2(2.0f, 2.0f);
+        _spiderAnimation.Scale = new Vector2(3.0f, 3.0f);
 
         // --- Se define el ORIGEN (Pivote) BASE UNA SOLA VEZ ---
         // (Esto detiene la vibración base)
-        _davidLegs.Origin = new Vector2(_davidLegs.Region.Width / 2f, 0f); 
+        _spiderWidth = _spiderAnimation.Region.Width * _spiderAnimation.Scale.X;
+        _spiderHeight = _spiderAnimation.Region.Height * _spiderAnimation.Scale.Y;
+        _davidLegs.Origin = new Vector2(_davidLegs.Region.Width / 2f, 0f);
         _davidChest.Origin = new Vector2(_davidChest.Region.Width / 2f, _davidChest.Region.Height);
 
         // --- Calculamos constantes ---
@@ -167,11 +185,18 @@ public class GameScene : Scene
         var collisionLayer = map.ObjectGroups["collisions"];
         foreach (var obj in collisionLayer.Objects)
         { _collisionRects.Add(new Rectangle((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height)); }
-        _position_pj = new Vector2(400, 10); 
+        _position_pj = new Vector2(400, 10);
         _texturaDebug = new Texture2D(Core.GraphicsDevice, 1, 1);
         _texturaDebug.SetData(new[] { Color.White });
         _debugSuelo = new Rectangle(0, 450, _roomBounds.Width, 50);
-        UpdateHitbox(); 
+        _spiderPosition = new Vector2(2000, 290);
+        _spiderHitbox = new Rectangle(
+        (int)(_spiderPosition.X - (_spiderWidth / 2f)),
+        (int)(_spiderPosition.Y - (_spiderHeight / 2f)),
+        (int)_spiderWidth,
+        (int)_spiderHeight
+    );
+        UpdateHitbox();
     }
 
 
@@ -179,13 +204,28 @@ public class GameScene : Scene
     {
         // ... (Tu Update() no cambia) ...
         HandleInput();
-        ApplyPhysics(gameTime); 
+        ApplyPhysics(gameTime);
         handleLegsAnimation();
-        handleChestAnimation(); 
+        handleChestAnimation();
+        _spiderAnimation.Play("spider_walking");
         _davidLegs.Play(_legState);
         _davidChest.Play(_chestState);
         _davidLegs.Update(gameTime);
         _davidChest.Update(gameTime);
+        _spiderAnimation.Update(gameTime);
+
+        _spiderAnimation.Effects = SpriteEffects.FlipHorizontally;
+        _spiderHitbox.Width = (int)_spiderWidth;
+        _spiderHitbox.Height = (int)_spiderHeight;
+
+        _spiderAnimation.Origin = new Vector2(_spiderAnimation.Region.Width / 2f, _spiderAnimation.Region.Height / 2f);
+
+        float hitboxOriginX = _spiderHitbox.Width / 2f;
+        float hitboxOriginY = _spiderHitbox.Height / 2f;
+
+        _spiderHitbox.X = (int)(_spiderPosition.X - hitboxOriginX);
+        _spiderHitbox.Y = (int)(_spiderPosition.Y - hitboxOriginY);
+
         _camera.Follow(_position_pj, _roomBounds, Core.GraphicsDevice.Viewport);
         base.Update(gameTime);
     }
@@ -197,12 +237,12 @@ public class GameScene : Scene
         isMovingHorizontally = false;
         isDucking = false;
         isShooting = false;
-        isAimingUp = false; 
+        isAimingUp = false;
         if (keyboard.IsKeyDown(Keys.S) && !_isJumping)
         { isDucking = true; }
-        if (keyboard.IsKeyDown(Keys.W) && !_isJumping) 
+        if (keyboard.IsKeyDown(Keys.W) && !_isJumping)
         { isAimingUp = true; }
-        if (!isDucking && !isAimingUp) 
+        if (!isDucking && !isAimingUp)
         {
             if (keyboard.IsKeyDown(Keys.A))
             {
@@ -243,7 +283,7 @@ public class GameScene : Scene
                 _velocity_pj.Y = 0;
                 _position_pj.Y = rect.Top - _constLegsHeight + 1;
                 UpdateHitbox();
-                break; 
+                break;
             }
         }
         _isJumping = !isGrounded;
@@ -256,18 +296,20 @@ public class GameScene : Scene
         else
         { _davidHitbox.Height = (int)_constHitboxHeight; }
         _davidHitbox.X = (int)(_position_pj.X - (_davidHitbox.Width / 2f));
-        float feetY = _position_pj.Y + _constLegsHeight; 
+        float feetY = _position_pj.Y + _constLegsHeight;
         _davidHitbox.Y = (int)(feetY - _davidHitbox.Height);
     }
     public void handleChestAnimation()
     {
         if (_isJumping) { _chestState = "jump-torso"; }
-        else if (isDucking) {
+        else if (isDucking)
+        {
             if (isShooting) { _chestState = "duck-shoot-torso"; }
             else if (isMovingHorizontally) { _chestState = "duck-walk-torso"; }
             else { _chestState = "duck-torso"; }
         }
-        else if (isAimingUp) {
+        else if (isAimingUp)
+        {
             if (isShooting) { _chestState = "shoot-up-torso"; }
             else { _chestState = "idle-torso"; }
         }
@@ -278,8 +320,9 @@ public class GameScene : Scene
     public void handleLegsAnimation()
     {
         if (_isJumping) { _legState = "jump-legs"; }
-        else if (isDucking) {
-            if (isShooting) { _legState = "duck-shoot-legs"; } 
+        else if (isDucking)
+        {
+            if (isShooting) { _legState = "duck-shoot-legs"; }
             else if (isMovingHorizontally) { _legState = "duck-walk-legs"; }
             else { _legState = "duck-legs"; }
         }
@@ -307,14 +350,15 @@ public class GameScene : Scene
         );
 
         Core.SpriteBatch.Draw(_background, Vector2.Zero, Color.White);
+        _spiderAnimation.Draw(Core.SpriteBatch, _spiderPosition);
 
         Vector2 finalDrawPosition = _position_pj;
-        
+
         // Ajuste vertical por agacharse (tu lógica original)
         if (isDucking)
         {
             float scaledStandingLegsHeight = _constLegsHeight;
-            float scaledDuckingLegsVisualHeight = _constLegsHeight * 0.6f; 
+            float scaledDuckingLegsVisualHeight = _constLegsHeight * 0.6f;
             float yOffset = scaledStandingLegsHeight - scaledDuckingLegsVisualHeight;
             finalDrawPosition.Y += yOffset;
         }
@@ -326,11 +370,11 @@ public class GameScene : Scene
         // 2. Obtener los offsets BASE de los diccionarios por nombre de fotograma
         Vector2 legOffsetFromDict = _legsFrameOffsets.GetValueOrDefault(legFrameName, Vector2.Zero);
         Vector2 torsoOffsetFromDict = _torsoFrameOffsets.GetValueOrDefault(torsoFrameName, Vector2.Zero);
-        
+
         // 3. Obtener el ancho real de la textura del frame actual
         float currentLegsWidth = _davidLegs.Region.Width;
         float currentTorsoWidth = _davidChest.Region.Width;
-        
+
         // 4. Obtener el Origin (ancla) que definimos en LoadContent (el 50% del frame IDLE)
         float baseLegsOriginX = _davidLegs.Origin.X;
         float baseTorsoOriginX = _davidChest.Origin.X;
@@ -346,7 +390,7 @@ public class GameScene : Scene
             legsCorrectionX *= -1; // Invierte si está volteado
             legsCorrectionX += currentLegsWidth - (2 * pivotX); // Corrección extra para que el flip sea perfecto desde el pixel 11
         }
-        
+
         // Corrección de posición horizontal para el torso
         float torsoCorrectionX = (currentTorsoWidth / 2f) - pivotX;
         if (_davidChest.Effects == SpriteEffects.FlipHorizontally)
@@ -358,7 +402,7 @@ public class GameScene : Scene
         // 6. Combinar el offset manual del diccionario con la corrección automática
         Vector2 legsFinalOffset = legOffsetFromDict + new Vector2(legsCorrectionX, 0);
         Vector2 torsoFinalOffset = torsoOffsetFromDict + new Vector2(torsoCorrectionX, 0);
-        
+
         // 7. Aplicar offsets a la posición de dibujo (¡ya están escalados!)
         Vector2 legsDrawPos = finalDrawPosition + (legsFinalOffset * _davidLegs.Scale);
         Vector2 chestDrawPos = finalDrawPosition + (torsoFinalOffset * _davidChest.Scale);
@@ -366,10 +410,12 @@ public class GameScene : Scene
         // 8. Dibujar
         _davidLegs.Draw(Core.SpriteBatch, legsDrawPos);
         _davidChest.Draw(Core.SpriteBatch, chestDrawPos);
-        
+
         // --- DIBUJO DE DEBUG ---
         DibujarBordeRectangulo(_debugSuelo, Color.LimeGreen, 3);
 
+        DibujarBordeRectangulo(_davidHitbox, Color.Cyan, 2);
+        DibujarBordeRectangulo(_spiderHitbox, Color.Red, 2);
         Core.SpriteBatch.End();
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/feder/OneDrive/Documentos/MonoGame/TestGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/beach_map.png</SourceFile>
-  <SourceTime>2025-11-13T00:38:04.958225-03:00</SourceTime>
-  <DestFile>c:/Users/feder/OneDrive/Documentos/MonoGame/TestGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/beach_map.xnb</DestFile>
-  <DestTime>2025-11-13T00:50:31.4744533-03:00</DestTime>
+  <SourceFile>C:/Users/feder/OneDrive/Documentos/MonoGame/TestGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/spider_edited.png</SourceFile>
+  <SourceTime>2025-11-12T23:12:42.7905411-03:00</SourceTime>
+  <DestFile>C:/Users/feder/OneDrive/Documentos/MonoGame/TestGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Content/spider_edited.xnb</DestFile>
+  <DestTime>2025-11-13T00:51:04.0240339-03:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-10-20T11:25:32-03:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
