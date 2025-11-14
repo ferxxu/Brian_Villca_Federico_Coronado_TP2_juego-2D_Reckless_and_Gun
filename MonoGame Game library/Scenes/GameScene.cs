@@ -403,26 +403,37 @@ public class GameScene : Scene
     }
     private void UpdateHitbox()
     {
+        float currentHitboxHeight;
+        float yOffset = 0f;
+
         // 1. Ajustar el tamaño de la hitbox si está agachado
         if (isDucking)
         {
-            // (Asumimos que la hitbox de agachado es 60% de la altura de las piernas)
-            _davidHitbox.Height = (int)(_constTorsoHeight + (_constLegsHeight * 0.6f));
+            float duckingLegsHeight = _constLegsHeight * 0.6f;
+            currentHitboxHeight = _constTorsoHeight + duckingLegsHeight;
+
+            yOffset = _constHitboxHeight - currentHitboxHeight;
         }
         else
         {
             // Altura normal (parado o saltando)
-            _davidHitbox.Height = (int)_constHitboxHeight;
+            currentHitboxHeight = _constHitboxHeight;
         }
         _davidHitbox.Width = (int)_constHitboxWidth;
+        _davidHitbox.Height = (int) currentHitboxHeight;
+
+        float anchorX = _davidLegs.Origin.X * _davidLegs.Scale.X;
+        _davidHitbox.X = (int) (_position_pj.X - anchorX);
+
+        float torsoAnchorY = _davidChest.Origin.Y * _davidChest.Scale.Y;
 
         // --- 2. Calcular X (Centrado en la Cintura) ---
         // (Posición X) - (Origen X de las Piernas * Escala)
-        _davidHitbox.X = (int)(_position_pj.X - (_davidLegs.Origin.X * _davidLegs.Scale.X));
-
+        // _davidHitbox.X = (int)(_position_pj.X - (_davidLegs.Origin.X * _davidLegs.Scale.X));
+        _davidHitbox.Y = (int)((_position_pj.Y - torsoAnchorY) + yOffset);
         // --- 3. Calcular Y (Anclado a la Cintura) ---
         // (Posición Y) - (Origen Y del Torso * Escala)
-        _davidHitbox.Y = (int)(_position_pj.Y - (_davidChest.Origin.Y * _davidChest.Scale.Y));
+        // _davidHitbox.Y = (int)(_position_pj.Y - (_davidChest.Origin.Y * _davidChest.Scale.Y));
     }
     public void handleChestAnimation()
     {
@@ -543,7 +554,6 @@ public class GameScene : Scene
         }
         else if (isMovingHorizontally) // <-- ¡CAMBIO! Prioridad 3: Correr
         {
-
             newState = "run-legs";
         }
         else if (isAimingUp) // <-- Prioridad 4: Apuntar arriba (quieto)
@@ -613,14 +623,6 @@ public class GameScene : Scene
         Vector2 finalDrawPosition = _position_pj;
 
         // Ajuste vertical por agacharse (Esta lógica está bien)
-        if (isDucking)
-        {
-            float scaledStandingLegsHeight = _constLegsHeight;
-            float scaledDuckingLegsVisualHeight = _constLegsHeight * 0.6f;
-            float yOffset = scaledStandingLegsHeight - scaledDuckingLegsVisualHeight;
-            finalDrawPosition.Y += yOffset;
-        }
-
         // --- ¡¡LÓGICA DE DIBUJO SIMPLIFICADA!! ---
 
         // 1. Obtener los nombres de los fotogramas (¡Con protección anti-crash!)
@@ -634,7 +636,7 @@ public class GameScene : Scene
         // 3. ¡LISTO! El 'Origin' (Píxel 11) se alineará con 'finalDrawPosition'
         // Solo necesitamos sumar el offset del diccionario
 
-        Vector2 legsDrawPos = finalDrawPosition + (legOffsetFromDict * _davidLegs.Scale);
+        Vector2 legsDrawPos = finalDrawPosition;
         Vector2 chestDrawPos = finalDrawPosition + (torsoOffsetFromDict * _davidChest.Scale);
 
         // 4. Dibujar
