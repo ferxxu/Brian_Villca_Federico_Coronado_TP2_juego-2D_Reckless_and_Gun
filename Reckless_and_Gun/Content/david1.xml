@@ -29,14 +29,14 @@
      <Region name="torso_duck_Animated_0" x="601" y="136" width="121" height="45"/>    
      <Region name="torso_duck_Animated_1" x="0" y="440" width="121" height="42" />
      <Region name="torso_duck_0" x="121" y="440" width="121" height="42" />
-     <Region name="torso_duck_shoot_0" x="145" y="241" width="121" height="43" />
-     <Region name="torso_duck_shoot_1" x="201" y="241" width="121" height="43" />
-     <Region name="torso_duck_shoot_2" x="260" y="246" width="121" height="43" />     
-     <Region name="torso_duck_walk_0" x="316" y="246" width="121" height="40" />
-     <Region name="torso_duck_walk_1" x="360" y="246" width="42" height="40" />
-     <Region name="torso_duck_walk_2" x="404" y="245" width="42" height="41" />
-     <Region name="torso_duck_walk_3" x="448" y="245" width="42" height="41" />
-     <Region name="torso_duck_walk_4" x="492" y="245" width="42" height="41" />
+     <Region name="torso_duck_shoot_0" x="241" y="440" width="121" height="43" />
+     <Region name="torso_duck_shoot_1" x="361" y="440" width="121" height="43" />
+     <Region name="torso_duck_shoot_2" x="481" y="440" width="121" height="43" />     
+     <Region name="torso_duck_walk_0" x="0" y="509" width="121" height="40" />
+     <Region name="torso_duck_walk_1" x="121" y="509" width="121" height="40" />
+     <Region name="torso_duck_walk_2" x="241" y="509" width="121" height="40" />
+     <Region name="torso_duck_walk_3" x="361" y="509" width="121" height="40" />
+     <Region name="torso_duck_walk_4" x="481" y="509" width="121" height="40" />
     
     <Region name="legs_idle_0" x="0" y="43" width="121" height="30" />  
     <Region name="legs_run_0" x="121" y="43" width="121" height="30" />
@@ -52,22 +52,21 @@
     <Region name="legs_run_10" x="121" y="106" width="121" height="30" />
     <Region name="legs_run_11" x="241" y="106" width="121" height="30" />
     <Region name="legs_run_12" x="361" y="106" width="121" height="30" />
-    <Region name="legs_duck_0" x="0" y="280" width="27" height="25" />
-    <Region name="legs_duck_1" x="28" y="284" width="26" height="20" />
-    <Region name="legs_duck_shoot_2" x="58" y="304" width="27" height="21" />
-    <Region name="legs_duck_shoot_3" x="86" y="304" width="27" height="21" />
-    <Region name="legs_duck_shoot_4" x="113" y="304" width="27" height="21" />
-    <Region name="legs_duck_shoot_5" x="140" y="303" width="27" height="21" />
-    <Region name="legs_duck_walk_0" x="168" y="304" width="25" height="21" />
-    <Region name="legs_duck_walk_1" x="194" y="304" width="25" height="21" />
-    <Region name="legs_duck_walk_2" x="220" y="302" width="25" height="23" />
-    <Region name="legs_duck_walk_3" x="246" y="303" width="24" height="22" />
-    <Region name="legs_duck_walk_4" x="271" y="303" width="24" height="22" />
+    <Region name="legs_duck_0" x="601" y="181" width="121" height="26" />
+    <Region name="legs_duck_1" x="0" y="485" width="121" height="21" />
+    <Region name="legs_duck_shoot_0" x="241" y="485" width="121" height="21" />
+    <Region name="legs_duck_shoot_1" x="361" y="485" width="121" height="21" />
+    <Region name="legs_duck_shoot_2" x="481" y="485" width="121" height="21" />
     <Region name="legs_jump_0" x="0" y="181" width="121" height="37" />
     <Region name="legs_jump_1" x="121" y="181" width="121" height="37" />
     <Region name="legs_jump_2" x="241" y="181" width="121" height="37" />
     <Region name="legs_jump_3" x="361" y="181" width="121" height="37" />
     <Region name="legs_jump_4" x="481" y="181" width="121" height="37" />
+    <Region name="legs_duck_walk_0" x="0" y="559" width="121" height="21" />
+    <Region name="legs_duck_walk_1" x="121" y="559" width="121" height="21" />
+    <Region name="legs_duck_walk_2" x="241" y="559" width="121" height="21" />
+    <Region name="legs_duck_walk_3" x="361" y="559" width="121" height="21" />
+    <Region name="legs_duck_walk_4" x="481" y="559" width="121" height="21" />
      </Regions>
 
   <Animations>
@@ -127,7 +126,7 @@
       <Frame region="torso_duck_shoot_2" />
     </Animation>
 
-    <Animation name="duck-walk-torso" delay="80">
+    <Animation name="duck-walk-torso" delay="100">
      <Frame region="torso_duck_walk_0" />
      <Frame region="torso_duck_walk_1" />
      <Frame region="torso_duck_walk_2" />
@@ -135,9 +134,12 @@
      <Frame region="torso_duck_walk_4" />
     </Animation>
 
-    <Animation name="duck-torso" delay="2000">
+    <Animation name="duck-torso-animated" delay="400">
       <Frame region="torso_duck_Animated_0" />
       <Frame region="torso_duck_Animated_1" />
+    </Animation>
+    <Animation name="duck-torso" delay="10">
+      <Frame region="torso_duck_0" />
       <Frame region="torso_duck_0" />
     </Animation>
 
@@ -170,15 +172,12 @@
     </Animation>
 
     <Animation name="duck-shoot-legs" delay="80">
-    <Frame region="legs_duck_0" />
-      <Frame region="legs_duck_1" />
+      <Frame region="legs_duck_shoot_0" />
+      <Frame region="legs_duck_shoot_1" />
       <Frame region="legs_duck_shoot_2" />
-      <Frame region="legs_duck_shoot_3" />
-      <Frame region="legs_duck_shoot_4" />
-      <Frame region="legs_duck_shoot_5" />
     </Animation>
 
-    <Animation name="duck-walk-legs" delay="80">
+    <Animation name="duck-walk-legs" delay="100">
       <Frame region="legs_duck_walk_0" />
       <Frame region="legs_duck_walk_1" />
       <Frame region="legs_duck_walk_2" />
@@ -186,8 +185,12 @@
       <Frame region="legs_duck_walk_4" />
     </Animation>
 
-    <Animation name="duck-legs" delay="100">
+    <Animation name="duck-legs-animated" delay="100">
       <Frame region="legs_duck_0" />
+      <Frame region="legs_duck_0" />
+
+    </Animation>
+    <Animation name="duck-legs" delay="100">
       <Frame region="legs_duck_1" />
     </Animation>
     </Animations>

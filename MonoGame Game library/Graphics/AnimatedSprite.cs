@@ -16,7 +16,18 @@ public class AnimatedSprite : Sprite
     public Dictionary<string, Animation> Animations;
 
     public string CurrentAnimationName => _currentAnimation?.Name;
+    public bool IsAnimationFinished
+    {
+        get
+        {
+            if (_currentAnimation == null) return true;
 
+            // La animación está "terminada" si NO está loopeando Y
+            // el frame actual es el último frame.
+            return !_currentAnimation.IsLooping &&
+                   (_currentFrame == _currentAnimation.Frames.Count - 1);
+        }
+    }
     public AnimatedSprite()
     {
         // --- ¡CAMBIO 2! ---

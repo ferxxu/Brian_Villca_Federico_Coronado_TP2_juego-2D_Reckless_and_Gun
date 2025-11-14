@@ -50,7 +50,8 @@ public class GameScene : Scene
     private bool isShooting;
     private bool isMovingHorizontally;
     private bool isAimingUp;
-    private bool isAimingDown; // <-- ¡AÑADE ESTA LÍNEA!
+    private bool isAimingDown;
+    private bool _isDuckingTransitionDone = false;
 
     // --- Constantes de Física ---
     private const float _speed = 150f;
@@ -92,7 +93,6 @@ public class GameScene : Scene
         _davidLegs.Scale = new Vector2(2.0f, 2.0f);
         _davidChest.Scale = new Vector2(2.0f, 2.0f);
         _spiderAnimation.Scale = new Vector2(3.0f, 3.0f);
-
         // --- Se define el ORIGEN (Pivote) BASE UNA SOLA VEZ ---
         // (Esto detiene la vibración base)
         float pivotX = 11f;
@@ -133,17 +133,17 @@ public class GameScene : Scene
             { "torso_shoot_up_2", new Vector2(0f, -30f) },
             { "torso_shoot_up_3", new Vector2(0f, -30f) },
             { "torso_shoot_up_4", new Vector2(0f, -30f) },
-            { "torso_duck_Animated_0", new Vector2(0f, 0f) },
-            { "torso_duck_Animated_1", new Vector2(0f, 0f) },
-            { "torso_duck_0", new Vector2(0f, 0f) },
-            { "torso_duck_shoot_0", new Vector2(0f, 0f) },
-            { "torso_duck_shoot_1", new Vector2(0f, 0f) },
-            { "torso_duck_shoot_2", new Vector2(0f, 0f) },
-            { "torso_duck_walk_0", new Vector2(0f, 0f) },
-            { "torso_duck_walk_1", new Vector2(0f, 0f) },
-            { "torso_duck_walk_2", new Vector2(0f, 0f) },
-            { "torso_duck_walk_3", new Vector2(0f, 0f) },
-            { "torso_duck_walk_4", new Vector2(0f, 0f) }
+            { "torso_duck_Animated_0", new Vector2(0f, 2f) },
+            { "torso_duck_Animated_1", new Vector2(0f, 13f) },
+            { "torso_duck_0", new Vector2(0f, 13f) },
+            { "torso_duck_shoot_0", new Vector2(0f, 13f) },
+            { "torso_duck_shoot_1", new Vector2(0f, 13f) },
+            { "torso_duck_shoot_2", new Vector2(0f, 13f) },
+            { "torso_duck_walk_0", new Vector2(0f, 13f) },
+            { "torso_duck_walk_1", new Vector2(0f, 13f) },
+            { "torso_duck_walk_2", new Vector2(0f, 14f) },
+            { "torso_duck_walk_3", new Vector2(0f, 13f) },
+            { "torso_duck_walk_4", new Vector2(0f, 13f) }
         };
 
         _legsFrameOffsets = new Dictionary<string, Vector2>()
@@ -162,23 +162,22 @@ public class GameScene : Scene
             { "legs_run_10", new Vector2(0f, 0f) },
             { "legs_run_11", new Vector2(0f, 0f) },
             { "legs_run_12", new Vector2(0f, 0f) },
-            { "legs_duck_0", new Vector2(0f, 0f) },
-            { "legs_duck_1", new Vector2(0f, 0f) },
-            { "legs_duck_shoot_2", new Vector2(0f, 0f) },
-            { "legs_duck_shoot_3", new Vector2(0f, 0f) },
-            { "legs_duck_shoot_4", new Vector2(0f, 0f) },
-            { "legs_duck_shoot_5", new Vector2(0f, 0f) },
-            { "legs_duck_walk_0", new Vector2(0f, 0f) },
-            { "legs_duck_walk_1", new Vector2(0f, 0f) },
-            { "legs_duck_walk_2", new Vector2(0f, 0f) },
-            { "legs_duck_walk_3", new Vector2(0f, 0f) },
-            { "legs_duck_walk_4", new Vector2(0f, 0f) },
+            { "legs_duck_0", new Vector2(0f,4f) },
+            { "legs_duck_1", new Vector2(0f, 8f) },
+            { "legs_duck_shoot_0", new Vector2(0f, 8f) },
+            { "legs_duck_shoot_1", new Vector2(0f, 8f) },
+            { "legs_duck_shoot_2", new Vector2(0f, 8f) },
+            { "legs_duck_walk_0", new Vector2(0f, 8f) },
+            { "legs_duck_walk_1", new Vector2(0f, 8f) },
+            { "legs_duck_walk_2", new Vector2(0f, 8f) },
+            { "legs_duck_walk_3", new Vector2(0f, 8f) },
+            { "legs_duck_walk_4", new Vector2(0f, 8f) },
             { "legs_jump_0", new Vector2(0f, 0f) },
             { "legs_jump_1", new Vector2(0f, 0f) },
             { "legs_jump_2", new Vector2(0f, 0f) },
             { "legs_jump_3", new Vector2(0f, 0f) },
             { "legs_jump_4", new Vector2(0f, 0f) },
-            { "legs_jump_5", new Vector2(0f, 0f) }
+            { "legs_jump_5", new Vector2(0f, 0f) },
         };
 
         // ... (El resto de tu LoadContent para colisiones, debug, etc. no cambia) ...
@@ -219,6 +218,17 @@ public class GameScene : Scene
         _davidLegs.Update(gameTime);
         _davidChest.Update(gameTime);
         _spiderAnimation.Update(gameTime);
+        if (!_isDuckingTransitionDone && 
+        (_davidLegs.CurrentAnimationName == "duck-legs-animated" || 
+         _davidChest.CurrentAnimationName == "duck-torso-animated"))
+    {
+        // Si CUALQUIERA de las dos (piernas o torso) ha terminado su
+        // animación (usando la nueva propiedad), marcamos como hecho.
+        if (_davidLegs.IsAnimationFinished || _davidChest.IsAnimationFinished)
+        {
+            _isDuckingTransitionDone = true;
+        }
+    }
 
         _spiderAnimation.Effects = SpriteEffects.FlipHorizontally;
         _spiderHitbox.Width = (int)_spiderWidth;
@@ -244,16 +254,23 @@ public class GameScene : Scene
         // Reset states
         isMovingHorizontally = false;
         isDucking = false;
+
+        // --- ¡CAMBIO! ---
+        // Si soltamos la tecla S, reseteamos la bandera de transición
+        if (!keyboard.IsKeyDown(Keys.S))
+        {
+            _isDuckingTransitionDone = false;
+        }
+        // --- FIN DEL CAMBIO ---
+
         isShooting = false;
         isAimingUp = false;
-        isAimingDown = false; // <-- NEW
+        isAimingDown = false;
 
         // 1. Check Aiming/Ducking states
         if (keyboard.IsKeyDown(Keys.W))
         { isAimingUp = true; }
 
-        // --- ¡CAMBIO! ---
-        // S ahora tiene doble función
         if (keyboard.IsKeyDown(Keys.S))
         {
             if (!_isJumping)
@@ -266,23 +283,19 @@ public class GameScene : Scene
             }
         }
 
-        // --- ¡CAMBIO! ---
-        // El bloque de movimiento AHORA permite moverse mientras se apunta.
-        // Solo se bloquea si estás AGRACHADO (isDucking).
-        if (!isDucking)
+        // --- ¡CAMBIO IMPORTANTE! (Request #4) ---
+        // Eliminamos el 'if (!isDucking)' que bloqueaba el movimiento
+        if (keyboard.IsKeyDown(Keys.A))
         {
-            if (keyboard.IsKeyDown(Keys.A))
-            {
-                isMovingHorizontally = true;
-                _davidLegs.Effects = SpriteEffects.FlipHorizontally;
-                _davidChest.Effects = SpriteEffects.FlipHorizontally;
-            }
-            else if (keyboard.IsKeyDown(Keys.D))
-            {
-                isMovingHorizontally = true;
-                _davidLegs.Effects = SpriteEffects.None;
-                _davidChest.Effects = SpriteEffects.None;
-            }
+            isMovingHorizontally = true;
+            _davidLegs.Effects = SpriteEffects.FlipHorizontally;
+            _davidChest.Effects = SpriteEffects.FlipHorizontally;
+        }
+        else if (keyboard.IsKeyDown(Keys.D))
+        {
+            isMovingHorizontally = true;
+            _davidLegs.Effects = SpriteEffects.None;
+            _davidChest.Effects = SpriteEffects.None;
         }
         // --- FIN DEL CAMBIO ---
 
@@ -290,7 +303,6 @@ public class GameScene : Scene
         if (keyboard.IsKeyDown(Keys.H))
         { isShooting = true; }
 
-        // El 'if' original ya previene saltar mientras estás agachado (isDucking)
         if (keyboard.IsKeyDown(Keys.J) && !_isJumping && !isDucking)
         { _velocity_pj.Y = _jumpSpeed; _isJumping = true; }
     }
@@ -401,6 +413,7 @@ public class GameScene : Scene
 
         _isJumping = !isGrounded;
     }
+
     private void UpdateHitbox()
     {
         float currentHitboxHeight;
@@ -420,10 +433,10 @@ public class GameScene : Scene
             currentHitboxHeight = _constHitboxHeight;
         }
         _davidHitbox.Width = (int)_constHitboxWidth;
-        _davidHitbox.Height = (int) currentHitboxHeight;
+        _davidHitbox.Height = (int)currentHitboxHeight;
 
         float anchorX = _davidLegs.Origin.X * _davidLegs.Scale.X;
-        _davidHitbox.X = (int) (_position_pj.X - anchorX);
+        _davidHitbox.X = (int)(_position_pj.X - anchorX);
 
         float torsoAnchorY = _davidChest.Origin.Y * _davidChest.Scale.Y;
 
@@ -436,156 +449,183 @@ public class GameScene : Scene
         // _davidHitbox.Y = (int)(_position_pj.Y - (_davidChest.Origin.Y * _davidChest.Scale.Y));
     }
     public void handleChestAnimation()
-    {
-        // 1. Determina cuál debería ser el estado
-        string newState;
+{
+    // 1. Determina cuál debería ser el estado
+    string newState;
 
-        if (_isJumping)
-        {
-            if (isAimingUp) // Prioridad 1: Apuntar arriba (aire)
-            {
-                if (isShooting) { newState = "shoot-up-torso"; }
-                else { newState = "up-torso"; }
-            }
-            else if (isAimingDown) // Prioridad 2: Apuntar abajo (aire)
-            {
-                if (isShooting) { newState = "shoot-down-torso"; }
-                else
-                {
-                    // CORRECCIÓN: Tu XML no define "down-torso", así que volvemos
-                    // a "jump-torso" si no estás disparando.
-                    newState = "jump-torso";
-                }
-            }
-            // --- ¡NUEVA LÓGICA AÑADIDA! ---
-            else if (isShooting) // Prioridad 3: Disparar horizontal (aire)
-            {
-                // Usa la misma animación de disparar que en el suelo
-                newState = "shoot-torso";
-            }
-            // --- FIN DE LA LÓGICA AÑADIDA ---
-            else // Prioridad 4: Salto normal (sin disparar)
-            {
-                newState = "jump-torso";
-            }
-        }
-        else if (isDucking) // En el suelo y agachado
-        {
-            if (isShooting)
-            {
-                if (isMovingHorizontally)
-                {
-                    newState = "shoot-down-torso";
-                }
-                else
-                {
-                    newState = "duck-shoot-torso";
-                }
-            }
-            else if (isMovingHorizontally)
-            {
-                newState = "duck-walk-torso";
-            }
-            else
-            {
-                newState = "duck-torso";
-            }
-        }
-        else if (isAimingUp) // En el suelo y apuntando arriba
+    if (_isJumping)
+    {
+        if (isAimingUp) // Prioridad 1: Apuntar arriba (aire)
         {
             if (isShooting) { newState = "shoot-up-torso"; }
             else { newState = "up-torso"; }
         }
-        else if (isShooting) // En el suelo, disparando de frente
+        else if (isAimingDown) // Prioridad 2: Apuntar abajo (aire)
+        {
+            if (isShooting) { newState = "shoot-down-torso"; }
+            else
+            {
+                newState = "jump-torso"; // Vuelve a saltar si no dispara
+            }
+        }
+        else if (isShooting) // Prioridad 3: Disparar horizontal (aire)
         {
             newState = "shoot-torso";
         }
-        else if (isMovingHorizontally) // En el suelo, corriendo
+        else // Prioridad 4: Salto normal (sin disparar)
         {
-            newState = "run-torso";
-        }
-        else // En el suelo, quieto
-        {
-            newState = "idle-torso";
-        }
-
-
-        // 2. ¡LA MAGIA! Solo actualiza si el estado cambió.
-        if (newState != _chestState)
-        {
-            _chestState = newState;
-
-            // --- Lógica de Loop (No necesita cambios) ---
-
-            bool shouldLoop = (newState == "idle-torso" ||
-                               newState == "run-torso" ||
-                               newState == "jump-torso" ||
-                               newState == "duck-walk-torso" ||
-                               newState == "duck-torso" ||
-                               newState == "up-torso" ||
-                               newState == "shoot-torso" ||
-                               newState == "shoot-up-torso" ||
-                               newState == "shoot-down-torso"
-                               );
-
-            if (_davidChest.Animations.ContainsKey(_chestState))
-            {
-                _davidChest.Animations[_chestState].IsLooping = shouldLoop;
-            }
-
-            _davidChest.Play(_chestState);
+            newState = "jump-torso";
         }
     }
-
-    public void handleLegsAnimation()
+    // --- ¡AQUÍ ESTÁ EL ARREGLO! ---
+    else if (isDucking) // En el suelo y agachado
     {
-        // 1. Determina cuál debería ser el estado
-        string newState;
-
-        if (_isJumping) // <-- Prioridad 1: Saltando
+        // Request #3: Si disparas, salta la transición
+        if (isShooting && !_isDuckingTransitionDone)
         {
-            newState = "jump-legs";
-        }
-        else if (isDucking) // <-- Prioridad 2: Agachado (maneja duck-walk)
-        {
-            if (isShooting) { newState = "duck-shoot-legs"; }
-            else if (isMovingHorizontally) { newState = "duck-walk-legs"; }
-            else { newState = "duck-legs"; }
-        }
-        else if (isMovingHorizontally) // <-- ¡CAMBIO! Prioridad 3: Correr
-        {
-            newState = "run-legs";
-        }
-        else if (isAimingUp) // <-- Prioridad 4: Apuntar arriba (quieto)
-        {
-            newState = "idle-legs";
-        }
-        else // <-- Prioridad 5: Quieto
-        {
-            newState = "idle-legs";
+            _isDuckingTransitionDone = true;
         }
 
-
-        // 2. ¡LA MAGIA! Solo actualiza si el estado cambió.
-        if (newState != _legState)
+        // Request #1 & #2: Transición
+        if (!_isDuckingTransitionDone)
         {
-            _legState = newState;
-
-            // --- Lógica de Loop (ya estaba bien) ---
-            bool shouldLoop = (newState == "idle-legs" ||
-                               newState == "run-legs" ||
-                               newState == "jump-legs" ||
-                               newState == "duck-walk-legs" ||
-                               newState == "duck-legs");
-
-            if (_davidLegs.Animations.ContainsKey(_legState))
-            {
-                _davidLegs.Animations[_legState].IsLooping = shouldLoop;
-            }
-
-            _davidLegs.Play(_legState);
+            newState = "duck-torso-animated";
+        }
+        // Request #4 & #5: Moverse agachado (duck-walk) tiene prioridad sobre disparar
+        else if (isMovingHorizontally)
+        {
+            newState = "duck-walk-torso";
+        }
+        // Ahora, si no te mueves, comprueba si disparas
+        else if (isShooting)
+        {
+            newState = "duck-shoot-torso";
+        }
+        // Si no haces nada, estado agachado normal
+        else
+        {
+            newState = "duck-torso";
         }
     }
+    // --- FIN DEL ARREGLO ---
+    else if (isAimingUp) // En el suelo y apuntando arriba
+    {
+        if (isShooting) { newState = "shoot-up-torso"; }
+        else { newState = "up-torso"; }
+    }
+    else if (isShooting) // En el suelo, disparando de frente
+    {
+        newState = "shoot-torso";
+    }
+    else if (isMovingHorizontally) // En el suelo, corriendo
+    {
+        newState = "run-torso";
+    }
+    else // En el suelo, quieto
+    {
+        newState = "idle-torso";
+    }
+
+
+    // 2. ¡LA MAGIA! Solo actualiza si el estado cambió.
+    if (newState != _chestState)
+    {
+        _chestState = newState;
+
+        // --- Lógica de Loop (No necesita cambios) ---
+        bool shouldLoop = (newState == "idle-torso" ||
+                            newState == "run-torso" ||
+                            newState == "jump-torso" ||
+                            newState == "duck-walk-torso" ||
+                            newState == "up-torso" ||
+                            newState == "shoot-torso" ||
+                            newState == "shoot-up-torso" ||
+                            newState == "shoot-down-torso"||
+                            newState == "duck-shoot-torso"
+                            );
+
+        if (_davidChest.Animations.ContainsKey(_chestState))
+        {
+            _davidChest.Animations[_chestState].IsLooping = shouldLoop;
+        }
+
+        _davidChest.Play(_chestState);
+    }
+}
+    public void handleLegsAnimation()
+{
+    // 1. Determina cuál debería ser el estado
+    string newState;
+
+    if (_isJumping) // <-- Prioridad 1: Saltando
+    {
+        newState = "jump-legs";
+    }
+    else if (isDucking) // <-- Prioridad 2: Agachado (CON LA LÓGICA DE TRANSICIÓN)
+    {
+        // Request #3: Si disparas, salta la transición
+        if (isShooting && !_isDuckingTransitionDone)
+        {
+            _isDuckingTransitionDone = true;
+        }
+
+        // Request #1 & #2: Transición
+        if (!_isDuckingTransitionDone)
+        {
+            newState = "duck-legs-animated";
+        }
+        // Request #4 & #5: Moverse agachado (duck-walk) tiene prioridad sobre disparar
+        else if (isMovingHorizontally)
+        {
+            newState = "duck-walk-legs";
+        }
+        // Ahora, si no te mueves, comprueba si disparas
+        else if (isShooting)
+        {
+            newState = "duck-shoot-legs";
+        }
+        // Si no haces nada, estado agachado normal
+        else
+        {
+            newState = "duck-legs";
+        }
+    }
+    // --- ¡ESTA PARTE FALTABA EN TU CÓDIGO! ---
+    else if (isMovingHorizontally) // <-- Prioridad 3: Correr
+    {
+        newState = "run-legs";
+    }
+    else if (isAimingUp) // <-- Prioridad 4: Apuntar arriba (quieto)
+    {
+        newState = "idle-legs";
+    }
+    else // <-- Prioridad 5: Quieto
+    {
+        newState = "idle-legs";
+    }
+    // --- FIN DE LA PARTE QUE FALTABA ---
+
+
+    // 2. ¡LA MAGIA! Solo actualiza si el estado cambió.
+    if (newState != _legState)
+    {
+        _legState = newState;
+
+        // --- Lógica de Loop (ya estaba bien) ---
+        bool shouldLoop = (newState == "idle-legs" ||
+                            newState == "run-legs" ||
+                            newState == "jump-legs" ||
+                            newState == "duck-walk-legs"
+                            );
+
+        if (_davidLegs.Animations.ContainsKey(_legState))
+        {
+            _davidLegs.Animations[_legState].IsLooping = shouldLoop;
+        }
+
+        _davidLegs.Play(_legState);
+    }
+}
     private void handleSpiderAnimation()
     {
         // Por ahora, la araña siempre está en este estado
@@ -636,7 +676,7 @@ public class GameScene : Scene
         // 3. ¡LISTO! El 'Origin' (Píxel 11) se alineará con 'finalDrawPosition'
         // Solo necesitamos sumar el offset del diccionario
 
-        Vector2 legsDrawPos = finalDrawPosition;
+        Vector2 legsDrawPos = finalDrawPosition + (legOffsetFromDict * _davidLegs.Scale);
         Vector2 chestDrawPos = finalDrawPosition + (torsoOffsetFromDict * _davidChest.Scale);
 
         // 4. Dibujar
