@@ -1,5 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XnaContent xmlns:ns="Microsoft.Xna.Framework">
-  <Asset Type="Object">
-  </Asset>
-</XnaContent>
+<TextureAtlas>
+<Texture>spider_edited</Texture>
+    <Regions>
+     <Region name="spider_upwards_0" x="6" y="47" width="117" height="73"/>
+     <Region name="spider_upwards_1" x="160" y="43" width="107" height="78"/>
+     <Region name="spider_upwards_2" x="304" y="21" width="143" height="87"/>
+     <Region name="spider_upwards_3" x="4" y="146" width="144" height="93"/>
+
+     <Region name="spider_vomit_0" x="156" y="175" width="117" height="72"/>
+     <Region name="spider_vomit_1" x="306" y="175" width="117" height="72"/>
+     <Region name="spider_vomit_2" x="6" y="303" width="117" height="72"/>
+     <Region name="spider_vomit_3" x="156" y="303" width="117" height="72"/>
+     <Region name="spider_vomit_4" x="306" y="303" width="117" height="72"/>
+     <Region name="spider_vomit_5" x="6" y="431" width="117" height="72"/>
+
+     <Region name="spider_walking_0" x="456" y="47" width="117" height="72"/>
+     <Region name="spider_walking_1" x="584" y="44" width="117" height="68"/>
+     <Region name="spider_walking_2" x="725" y="44" width="101" height="68"/>
+     <Region name="spider_walking_3" x="469" y="175" width="98" height="63"/>
+     <Region name="spider_walking_4" x="584" y="176" width="107" height="63"/>
+     <Region name="spider_walking_5" x="719" y="173" width="100" height="67"/>
+     <Region name="spider_walking_6" x="463" y="301" width="104" height="67"/>
+     <Region name="spider_walking_7" x="584" y="303" width="107" height="63"/>
+    </Regions>
+
+    <Animations>
+    <Animation name="spider_upwards" delay="100">
+     <Frame region="spider_upwards_0"/>
+     <Frame region="spider_upwards_1"/>
+     <Frame region="spider_upwards_2"/>
+     <Frame region="spider_upwards_3"/>
+    </Animation>
+
+     <Animation name="spider_vomit" delay="100">
+      <Frame region="spider_vomit_0"/>
+      <Frame region="spider_vomit_1"/>
+      <Frame region="spider_vomit_2"/>
+      <Frame region="spider_vomit_3"/>
+      <Frame region="spider_vomit_4"/>
+      <Frame region="spider_vomit_5"/>
+    </Animation>
+
+    <Animation name="spider_walking" delay="80">
+      <Frame region="spider_walking_0"/>
+      <Frame region="spider_walking_1"/>
+      <Frame region="spider_walking_2"/>
+      <Frame region="spider_walking_3"/>
+      <Frame region="spider_walking_4"/>
+      <Frame region="spider_walking_5"/>
+      <Frame region="spider_walking_6"/>
+      <Frame region="spider_walking_7"/>
+    </Animation>
+
+    </Animations>
+
+</TextureAtlas>

@@ -63,6 +63,7 @@ public class GameScene : Scene
     private Vector2 _spiderVelocity;
     private float _spiderWidth;
     private float _spiderHeight;
+    private string _spiderState = "";
 
 
     public override void Initialize()
@@ -93,10 +94,12 @@ public class GameScene : Scene
 
         // --- Se define el ORIGEN (Pivote) BASE UNA SOLA VEZ ---
         // (Esto detiene la vibración base)
+        float pivotX = 11f;
+
         _spiderWidth = _spiderAnimation.Region.Width * _spiderAnimation.Scale.X;
         _spiderHeight = _spiderAnimation.Region.Height * _spiderAnimation.Scale.Y;
-        _davidLegs.Origin = new Vector2(_davidLegs.Region.Width / 2f, 0f);
-        _davidChest.Origin = new Vector2(_davidChest.Region.Width / 2f, _davidChest.Region.Height);
+        _davidLegs.Origin = new Vector2(pivotX, 0f);
+        _davidChest.Origin = new Vector2(pivotX, _davidChest.Region.Height);
 
         // --- Calculamos constantes ---
         _constLegsHeight = _davidLegs.Region.Height * _davidLegs.Scale.Y;
@@ -183,9 +186,12 @@ public class GameScene : Scene
         var map = new TmxMap(mapFilePath);
         _roomBounds = new Rectangle(0, 0, map.Width * map.TileWidth, map.Height * map.TileHeight);
         var collisionLayer = map.ObjectGroups["collisions"];
+
         foreach (var obj in collisionLayer.Objects)
-        { _collisionRects.Add(new Rectangle((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height)); }
-        _position_pj = new Vector2(400, 10);
+        {
+            _collisionRects.Add(new Rectangle((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height));
+        }
+        _position_pj = new Vector2(600, 10);
         _texturaDebug = new Texture2D(Core.GraphicsDevice, 1, 1);
         _texturaDebug.SetData(new[] { Color.White });
         _debugSuelo = new Rectangle(0, 450, _roomBounds.Width, 50);
@@ -207,9 +213,8 @@ public class GameScene : Scene
         ApplyPhysics(gameTime);
         handleLegsAnimation();
         handleChestAnimation();
-        _spiderAnimation.Play("spider_walking");
-        _davidLegs.Play(_legState);
-        _davidChest.Play(_chestState);
+        handleSpiderAnimation();
+
         _davidLegs.Update(gameTime);
         _davidChest.Update(gameTime);
         _spiderAnimation.Update(gameTime);
@@ -259,76 +264,206 @@ public class GameScene : Scene
         }
         if (keyboard.IsKeyDown(Keys.H))
         { isShooting = true; }
-        if (keyboard.WasKeyJustPressed(Keys.R) && !_isJumping && !isDucking)
+        if (keyboard.IsKeyDown(Keys.J) && !_isJumping && !isDucking)
         { _velocity_pj.Y = _jumpSpeed; _isJumping = true; }
     }
     private void ApplyPhysics(GameTime gameTime)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        _velocity_pj.Y += _gravity * deltaTime;
-        _velocity_pj.Y = MathHelper.Clamp(_velocity_pj.Y, -_jumpSpeed * 2, _gravity * 2f);
+
+        // --- 1. ACTUALIZAR VELOCIDAD X (basado en HandleInput) ---
         if (isMovingHorizontally)
-        { _velocity_pj.X = (_davidLegs.Effects == SpriteEffects.FlipHorizontally) ? -_speed : _speed; }
+        {
+            _velocity_pj.X = (_davidLegs.Effects == SpriteEffects.FlipHorizontally) ? -_speed : _speed;
+        }
         else
-        { _velocity_pj.X = 0; }
+        {
+            _velocity_pj.X = 0; // Detenerse
+        }
+
+        // --- 2. APLICAR GRAVEDAD (Y) ---
+        // La gravedad SIEMPRE se aplica si no estamos en el suelo
+        // Opcional: si _isJumping es true, aplica gravedad.
+        _velocity_pj.Y += _gravity * deltaTime;
+
+        // Limita la velocidad de caída y de subida
+        _velocity_pj.Y = MathHelper.Clamp(_velocity_pj.Y, _jumpSpeed, _gravity * 2f);
+
+        // --- 3. MANEJAR COLISIONES POR EJE ---
+        // (Llamamos a los nuevos métodos)
+        HandleHorizontalCollisions(deltaTime);
+
+        float velocityY_beforeCollision = _velocity_pj.Y;
+
+        HandleVerticalCollisions(deltaTime);
+
+        if (!_isJumping && velocityY_beforeCollision > 0)
+        {
+            _velocity_pj.Y = 0f; // <-- Esta es la corrección final
+        }
+    }
+    // 2. Nuevo método para colisiones HORIZONTALES
+    private void HandleHorizontalCollisions(float deltaTime)
+    {
+        // Mover en X
         _position_pj.X += _velocity_pj.X * deltaTime;
-        _position_pj.Y += _velocity_pj.Y * deltaTime;
-        UpdateHitbox();
-        bool isGrounded = false;
+        UpdateHitbox(); // Actualiza la hitbox a la nueva posición X
+
+        // Comprobar colisiones en X
         foreach (Rectangle rect in _collisionRects)
         {
-            if (_davidHitbox.Intersects(rect) && _velocity_pj.Y >= 0)
+            if (_davidHitbox.Intersects(rect))
             {
-                isGrounded = true;
-                _velocity_pj.Y = 0;
-                _position_pj.Y = rect.Top - _constLegsHeight + 1;
-                UpdateHitbox();
-                break;
+                // ¡Colisión X!
+                if (_velocity_pj.X > 0) // Si se movía a la derecha
+                {
+                    float anchorX = _davidLegs.Origin.X * _davidLegs.Scale.X;
+                    _position_pj.X = rect.Left - (_davidHitbox.Width - anchorX);
+                }
+                else if (_velocity_pj.X < 0) // Si se movía a la izquierda
+                {
+                    float anchorX = _davidLegs.Origin.X * _davidLegs.Scale.X;
+                    _position_pj.X = rect.Right + anchorX;
+                }
+                _velocity_pj.X = 0; // Detiene el movimiento horizontal
+                UpdateHitbox(); // Actualiza la hitbox a la posición X corregida
             }
         }
+    }
+
+    // 3. Nuevo método para colisiones VERTICALES
+    private void HandleVerticalCollisions(float deltaTime)
+    {
+        // Mover en Y
+        _position_pj.Y += _velocity_pj.Y * deltaTime;
+        UpdateHitbox(); // Actualiza la hitbox a la nueva posición Y
+
+        bool isGrounded = false; // Asumir que estamos en el aire
+
+        // Comprobar colisiones en Y
+        foreach (Rectangle rect in _collisionRects)
+        {
+            // Comprueba la intersección con CUALQUIER objeto.
+            if (_davidHitbox.Intersects(rect))
+            {
+                if (_velocity_pj.Y > 0) // Si estaba cayendo (colisión con SUELO)
+                {
+                    isGrounded = true;
+                    _velocity_pj.Y = 0;
+
+                    // Pegado al suelo (Corregido de antes)
+                    _position_pj.Y = rect.Top - _constLegsHeight;
+                }
+                else if (_velocity_pj.Y < 0) // Si estaba subiendo (golpe de CABEZA)
+                {
+                    _velocity_pj.Y = 0;
+
+                    // Pegado al techo (Corregido de antes)
+                    _position_pj.Y = rect.Bottom + _constTorsoHeight;
+                }
+                UpdateHitbox(); // Actualiza la hitbox a la posición Y corregida
+            }
+        }
+
+        // --- ACTUALIZAR ESTADO DE SALTO ---
         _isJumping = !isGrounded;
     }
     private void UpdateHitbox()
     {
-        _davidHitbox.Width = (int)_constHitboxWidth;
+        // 1. Ajustar el tamaño de la hitbox si está agachado
         if (isDucking)
-        { _davidHitbox.Height = (int)(_constTorsoHeight + (_constLegsHeight * 0.6f)); }
+        {
+            // (Asumimos que la hitbox de agachado es 60% de la altura de las piernas)
+            _davidHitbox.Height = (int)(_constTorsoHeight + (_constLegsHeight * 0.6f));
+        }
         else
-        { _davidHitbox.Height = (int)_constHitboxHeight; }
-        _davidHitbox.X = (int)(_position_pj.X - (_davidHitbox.Width / 2f));
-        float feetY = _position_pj.Y + _constLegsHeight;
-        _davidHitbox.Y = (int)(feetY - _davidHitbox.Height);
+        {
+            // Altura normal (parado o saltando)
+            _davidHitbox.Height = (int)_constHitboxHeight;
+        }
+        _davidHitbox.Width = (int)_constHitboxWidth;
+
+        // --- 2. Calcular X (Centrado en la Cintura) ---
+        // (Posición X) - (Origen X de las Piernas * Escala)
+        _davidHitbox.X = (int)(_position_pj.X - (_davidLegs.Origin.X * _davidLegs.Scale.X));
+
+        // --- 3. Calcular Y (Anclado a la Cintura) ---
+        // (Posición Y) - (Origen Y del Torso * Escala)
+        _davidHitbox.Y = (int)(_position_pj.Y - (_davidChest.Origin.Y * _davidChest.Scale.Y));
     }
     public void handleChestAnimation()
     {
-        if (_isJumping) { _chestState = "jump-torso"; }
+        // 1. Determina cuál debería ser el estado
+        string newState;
+
+        // ¡ARREGLADO! Usamos "idle-torso" para el salto, como pediste.
+        if (_isJumping)
+        {
+            newState = "idle-torso";
+        }
         else if (isDucking)
         {
-            if (isShooting) { _chestState = "duck-shoot-torso"; }
-            else if (isMovingHorizontally) { _chestState = "duck-walk-torso"; }
-            else { _chestState = "duck-torso"; }
+            if (isShooting) { newState = "duck-shoot-torso"; }
+            else if (isMovingHorizontally) { newState = "duck-walk-torso"; }
+            else { newState = "duck-torso"; }
         }
         else if (isAimingUp)
         {
-            if (isShooting) { _chestState = "shoot-up-torso"; }
-            else { _chestState = "idle-torso"; }
+            if (isShooting) { newState = "shoot-up-torso"; }
+            else { newState = "idle-torso"; }
         }
-        else if (isShooting) { _chestState = "shoot-torso"; }
-        else if (isMovingHorizontally) { _chestState = "run-torso"; }
-        else { _chestState = "idle-torso"; }
+        else if (isShooting) { newState = "shoot-torso"; }
+        else if (isMovingHorizontally) { newState = "run-torso"; }
+        else { newState = "idle-torso"; }
+
+
+        // 2. ¡LA MAGIA! Solo actualiza si el estado cambió.
+        // Esto evita el "parpadeo"
+        if (newState != _chestState)
+        {
+            _chestState = newState;
+            _davidChest.Play(_chestState);
+        }
     }
     public void handleLegsAnimation()
     {
-        if (_isJumping) { _legState = "jump-legs"; }
+        // 1. Determina cuál debería ser el estado
+        string newState;
+
+        // ¡ARREGLADO! Usamos "idle-legs" para el salto, como pediste.
+        if (_isJumping)
+        {
+            newState = "idle-legs";
+        }
         else if (isDucking)
         {
-            if (isShooting) { _legState = "duck-shoot-legs"; }
-            else if (isMovingHorizontally) { _legState = "duck-walk-legs"; }
-            else { _legState = "duck-legs"; }
+            if (isShooting) { newState = "duck-shoot-legs"; }
+            else if (isMovingHorizontally) { newState = "duck-walk-legs"; }
+            else { newState = "duck-legs"; }
         }
-        else if (isAimingUp) { _legState = "idle-legs"; }
-        else if (isMovingHorizontally) { _legState = "run-legs"; }
-        else { _legState = "idle-legs"; }
+        else if (isAimingUp) { newState = "idle-legs"; }
+        else if (isMovingHorizontally) { newState = "run-legs"; }
+        else { newState = "idle-legs"; }
+
+
+        // 2. ¡LA MAGIA! Solo actualiza si el estado cambió.
+        if (newState != _legState)
+        {
+            _legState = newState;
+            _davidLegs.Play(_legState);
+        }
+    }
+    private void handleSpiderAnimation()
+    {
+        // Por ahora, la araña siempre está en este estado
+        string newState = "spider_vomit";
+
+        // Solo llamamos a .Play() si el estado ha cambiado
+        if (newState != _spiderState)
+        {
+            _spiderState = newState;
+            _spiderAnimation.Play(_spiderState);
+        }
     }
     private void DibujarBordeRectangulo(Rectangle rect, Color color, int grosor)
     {
@@ -345,8 +480,8 @@ public class GameScene : Scene
         Core.GraphicsDevice.Clear(Color.Black);
 
         Core.SpriteBatch.Begin(
-            samplerState: SamplerState.PointClamp,
-            transformMatrix: _camera.GetViewMatrix(Core.GraphicsDevice.Viewport)
+          samplerState: SamplerState.PointClamp,
+          transformMatrix: _camera.GetViewMatrix(Core.GraphicsDevice.Viewport)
         );
 
         Core.SpriteBatch.Draw(_background, Vector2.Zero, Color.White);
@@ -354,7 +489,7 @@ public class GameScene : Scene
 
         Vector2 finalDrawPosition = _position_pj;
 
-        // Ajuste vertical por agacharse (tu lógica original)
+        // Ajuste vertical por agacharse (Esta lógica está bien)
         if (isDucking)
         {
             float scaledStandingLegsHeight = _constLegsHeight;
@@ -363,58 +498,34 @@ public class GameScene : Scene
             finalDrawPosition.Y += yOffset;
         }
 
-        // 1. Obtener los nombres de los fotogramas actuales
+        // --- ¡¡LÓGICA DE DIBUJO SIMPLIFICADA!! ---
+
+        // 1. Obtener los nombres de los fotogramas (¡Con protección anti-crash!)
         string legFrameName = _davidLegs.Region?.Name ?? "";
         string torsoFrameName = _davidChest.Region?.Name ?? "";
 
-        // 2. Obtener los offsets BASE de los diccionarios por nombre de fotograma
+        // 2. Obtener los offsets BASE (para ajustes manuales finos)
         Vector2 legOffsetFromDict = _legsFrameOffsets.GetValueOrDefault(legFrameName, Vector2.Zero);
         Vector2 torsoOffsetFromDict = _torsoFrameOffsets.GetValueOrDefault(torsoFrameName, Vector2.Zero);
 
-        // 3. Obtener el ancho real de la textura del frame actual
-        float currentLegsWidth = _davidLegs.Region.Width;
-        float currentTorsoWidth = _davidChest.Region.Width;
+        // 3. ¡LISTO! El 'Origin' (Píxel 11) se alineará con 'finalDrawPosition'
+        // Solo necesitamos sumar el offset del diccionario
 
-        // 4. Obtener el Origin (ancla) que definimos en LoadContent (el 50% del frame IDLE)
-        float baseLegsOriginX = _davidLegs.Origin.X;
-        float baseTorsoOriginX = _davidChest.Origin.X;
+        Vector2 legsDrawPos = finalDrawPosition + (legOffsetFromDict * _davidLegs.Scale);
+        Vector2 chestDrawPos = finalDrawPosition + (torsoOffsetFromDict * _davidChest.Scale);
 
-        // 5. Calcular la corrección para que el PIXEL 11 (tu hebilla) sea el centro real
-        // Esto es la magia: no importa el ancho de la imagen, siempre pivotamos sobre el PIXEL 11
-        float pivotX = 11f; // <--- ¡TU PUNTO DE ANCLA DEFINITIVO (Píxel 11)!
-
-        // Corrección de posición horizontal para las piernas
-        float legsCorrectionX = (currentLegsWidth / 2f) - pivotX;
-        if (_davidLegs.Effects == SpriteEffects.FlipHorizontally)
-        {
-            legsCorrectionX *= -1; // Invierte si está volteado
-            legsCorrectionX += currentLegsWidth - (2 * pivotX); // Corrección extra para que el flip sea perfecto desde el pixel 11
-        }
-
-        // Corrección de posición horizontal para el torso
-        float torsoCorrectionX = (currentTorsoWidth / 2f) - pivotX;
-        if (_davidChest.Effects == SpriteEffects.FlipHorizontally)
-        {
-            torsoCorrectionX *= -1; // Invierte si está volteado
-            torsoCorrectionX += currentTorsoWidth - (2 * pivotX); // Corrección extra para que el flip sea perfecto desde el pixel 11
-        }
-
-        // 6. Combinar el offset manual del diccionario con la corrección automática
-        Vector2 legsFinalOffset = legOffsetFromDict + new Vector2(legsCorrectionX, 0);
-        Vector2 torsoFinalOffset = torsoOffsetFromDict + new Vector2(torsoCorrectionX, 0);
-
-        // 7. Aplicar offsets a la posición de dibujo (¡ya están escalados!)
-        Vector2 legsDrawPos = finalDrawPosition + (legsFinalOffset * _davidLegs.Scale);
-        Vector2 chestDrawPos = finalDrawPosition + (torsoFinalOffset * _davidChest.Scale);
-
-        // 8. Dibujar
+        // 4. Dibujar
+        // (MonoGame alinea _davidLegs.Origin con legsDrawPos automáticamente)
         _davidLegs.Draw(Core.SpriteBatch, legsDrawPos);
         _davidChest.Draw(Core.SpriteBatch, chestDrawPos);
 
-        // --- DIBUJO DE DEBUG ---
-        DibujarBordeRectangulo(_debugSuelo, Color.LimeGreen, 3);
 
-        DibujarBordeRectangulo(_davidHitbox, Color.Cyan, 2);
+        // --- DIBUJO DE DEBUG ---
+        if (_isJumping)
+            DibujarBordeRectangulo(_davidHitbox, Color.Red, 2);
+        else
+            DibujarBordeRectangulo(_davidHitbox, Color.LimeGreen, 2);
+
         DibujarBordeRectangulo(_spiderHitbox, Color.Red, 2);
         Core.SpriteBatch.End();
     }

@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-<<<<<<< HEAD:Reckless_and_Gun/Content/obj/DesktopGL/net9.0/Content/david_edited_censure.mgcontent
-  <SourceFile>C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/david_edited_censure.png</SourceFile>
-  <SourceTime>2025-11-13T19:05:46.6943984-03:00</SourceTime>
-  <DestFile>C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Content/david_edited_censure.xnb</DestFile>
-  <DestTime>2025-11-13T19:08:38.7040271-03:00</DestTime>
-=======
-  <SourceFile>C:/Users/feder/OneDrive/Documentos/MonoGame/TestGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/david_editedv2 (1).png</SourceFile>
-  <SourceTime>2025-11-13T00:38:05.585616-03:00</SourceTime>
-  <DestFile>C:/Users/feder/OneDrive/Documentos/MonoGame/TestGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Content/david_editedv2 (1).xnb</DestFile>
-  <DestTime>2025-11-13T00:40:22.7942525-03:00</DestTime>
->>>>>>> f3d9d79df9dc8a48fc989eec0d09425d327904ef:Reckless_and_Gun/Content/obj/DesktopGL/net9.0/Content/david_editedv2 (1).mgcontent
+  <SourceFile>C:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/david_edited_censure.png</SourceFile>
+  <SourceTime>2025-11-13T20:57:03.0330595-03:00</SourceTime>
+  <DestFile>C:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Content/david_edited_censure.xnb</DestFile>
+  <DestTime>2025-11-13T20:58:37.9785963-03:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-10-20T11:25:32-03:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

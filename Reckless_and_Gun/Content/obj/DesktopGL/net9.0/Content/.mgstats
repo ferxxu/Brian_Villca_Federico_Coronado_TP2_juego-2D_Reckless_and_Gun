@@ -1,9 +1,1 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-<<<<<<< HEAD
-"C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/beach_map.png","C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Content/beach_map.xnb","TextureProcessor","Texture2DContent",352848,4800085,0.400099
-"C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/david_edited_censure.png","C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Content/david_edited_censure.xnb","TextureProcessor","Texture2DContent",67554,3328085,0.276142
-"C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/david2.xml","C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\Content\bin\DesktopGL\Content\david2.xml","CopyItem","File",8919,8919,0.0018256
-"C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/font.spritefont","C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Content/font.xnb","FontDescriptionProcessor","SpriteFontContent",512,529433,0.2607831
-"C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/jungle.png","C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Content/jungle.xnb","TextureProcessor","Texture2DContent",9667256,30525205,0.9998003
-=======
->>>>>>> f3d9d79df9dc8a48fc989eec0d09425d327904ef
