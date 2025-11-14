@@ -1,0 +1,10 @@
+# .NET / Visual Studio
+[Bb]in/
+[Oo]bj/
+.vs/
+*.suo
+*.user
+
+# MonoGame Content Pipeline
+*/Content/bin/
+*/Content/obj/
