@@ -50,6 +50,7 @@ public class GameScene : Scene
     private bool isShooting;
     private bool isMovingHorizontally;
     private bool isAimingUp;
+    private bool isAimingDown; // <-- ¡AÑADE ESTA LÍNEA!
 
     // --- Constantes de Física ---
     private const float _speed = 150f;
@@ -63,6 +64,7 @@ public class GameScene : Scene
     private Vector2 _spiderVelocity;
     private float _spiderWidth;
     private float _spiderHeight;
+    private string _spiderState = "";
 
 
     public override void Initialize()
@@ -79,8 +81,11 @@ public class GameScene : Scene
     public override void LoadContent()
     {
         _background = Content.Load<Texture2D>("beach_map");
-        TextureAtlas atlasSpider = TextureAtlas.FromFile(Core.Content, "spider.xml");
+
         TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "david1.xml"); // Asegúrate que el XML se llame 'david.xml'
+
+        TextureAtlas atlasSpider = TextureAtlas.FromFile(Core.Content, "spider.xml");
+
         _davidChest = atlas.CreateAnimatedSprite("idle-torso");
         _davidLegs = atlas.CreateAnimatedSprite("idle-legs");
         _spiderAnimation = atlasSpider.CreateAnimatedSprite("spider_walking");
@@ -90,10 +95,12 @@ public class GameScene : Scene
 
         // --- Se define el ORIGEN (Pivote) BASE UNA SOLA VEZ ---
         // (Esto detiene la vibración base)
+        float pivotX = 11f;
+
         _spiderWidth = _spiderAnimation.Region.Width * _spiderAnimation.Scale.X;
         _spiderHeight = _spiderAnimation.Region.Height * _spiderAnimation.Scale.Y;
-        _davidLegs.Origin = new Vector2(_davidLegs.Region.Width / 2f, 0f);
-        _davidChest.Origin = new Vector2(_davidChest.Region.Width / 2f, _davidChest.Region.Height);
+        _davidLegs.Origin = new Vector2(pivotX, 0f);
+        _davidChest.Origin = new Vector2(pivotX, _davidChest.Region.Height);
 
         // --- Calculamos constantes ---
         _constLegsHeight = _davidLegs.Region.Height * _davidLegs.Scale.Y;
@@ -103,9 +110,9 @@ public class GameScene : Scene
 
         _torsoFrameOffsets = new Dictionary<string, Vector2>()
         {
-            { "torso_idle_0", new Vector2(6f, 0f) }, // <- Tu base
-            { "torso_run_0", new Vector2(6f, 0f) },
-            { "torso_run_1", new Vector2(6f, 0f) },
+            { "torso_idle_0", new Vector2(0f, 0f) }, // <- Tu base
+            { "torso_run_0", new Vector2(0f, 0f) },
+            { "torso_run_1", new Vector2(0f, 0f) },
             { "torso_jump_0", new Vector2(0f, 0f) },
             { "torso_jump_1", new Vector2(0f, 0f) },
             { "torso_jump_2", new Vector2(0f, 0f) },
@@ -115,23 +122,23 @@ public class GameScene : Scene
             { "torso_shoot_1", new Vector2(0f, 0f) },
             { "torso_shoot_2", new Vector2(0f, 0f) },
             { "torso_shoot_3", new Vector2(0f, 0f) },
-            { "torso_shoot_down_0", new Vector2(0f, 0f) },
-            { "torso_shoot_down_1", new Vector2(0f, 0f) },
-            { "torso_shoot_down_2", new Vector2(0f, 0f) },
-            { "torso_shoot_down_3", new Vector2(0f, 0f) },
-            { "torso_shoot_down_4", new Vector2(0f, 0f) },
-            { "torso_shoot_up_0", new Vector2(0f, 0f) },
-            { "torso_shoot_up_1", new Vector2(0f, 0f) },
-            { "torso_shoot_up_2", new Vector2(0f, 0f) },
-            { "torso_shoot_up_3", new Vector2(0f, 0f) },
-            { "torso_shoot_up_4", new Vector2(0f, 0f) },
-            { "torso_shoot_up_5", new Vector2(0f, 0f) },
+            { "torso_down_0", new Vector2(0f, 10f) },
+            { "torso_shoot_down_0", new Vector2(0f, 10f) },
+            { "torso_shoot_down_1", new Vector2(0f, 10f) },
+            { "torso_shoot_down_2", new Vector2(0f, 10f) },
+            { "torso_shoot_down_3", new Vector2(0f, 10f) },
+            { "torso_up_0", new Vector2(0f, -3f) },
+            { "torso_shoot_up_0", new Vector2(0f, -30f) },
+            { "torso_shoot_up_1", new Vector2(0f, -30f) },
+            { "torso_shoot_up_2", new Vector2(0f, -30f) },
+            { "torso_shoot_up_3", new Vector2(0f, -30f) },
+            { "torso_shoot_up_4", new Vector2(0f, -30f) },
+            { "torso_duck_Animated_0", new Vector2(0f, 0f) },
+            { "torso_duck_Animated_1", new Vector2(0f, 0f) },
             { "torso_duck_0", new Vector2(0f, 0f) },
-            { "torso_duck_1", new Vector2(0f, 0f) },
+            { "torso_duck_shoot_0", new Vector2(0f, 0f) },
+            { "torso_duck_shoot_1", new Vector2(0f, 0f) },
             { "torso_duck_shoot_2", new Vector2(0f, 0f) },
-            { "torso_duck_shoot_3", new Vector2(0f, 0f) },
-            { "torso_duck_shoot_4", new Vector2(0f, 0f) },
-            { "torso_duck_shoot_5", new Vector2(0f, 0f) },
             { "torso_duck_walk_0", new Vector2(0f, 0f) },
             { "torso_duck_walk_1", new Vector2(0f, 0f) },
             { "torso_duck_walk_2", new Vector2(0f, 0f) },
@@ -142,10 +149,10 @@ public class GameScene : Scene
         _legsFrameOffsets = new Dictionary<string, Vector2>()
         {
             { "legs_idle_0", new Vector2(0f, 0f) }, // <- Tu base
-            { "legs_run_0", new Vector2(-6f, 0f) },
-            { "legs_run_1", new Vector2(-5f, 0f) },
-            { "legs_run_2", new Vector2(-3f, 0f) },
-            { "legs_run_3", new Vector2(3f, 0f) },
+            { "legs_run_0", new Vector2(0f, 0f) },
+            { "legs_run_1", new Vector2(0f, 0f) },
+            { "legs_run_2", new Vector2(0f, 0f) },
+            { "legs_run_3", new Vector2(0f, 0f) },
             { "legs_run_4", new Vector2(0f, 0f) },
             { "legs_run_5", new Vector2(0f, 0f) },
             { "legs_run_6", new Vector2(0f, 0f) },
@@ -180,9 +187,12 @@ public class GameScene : Scene
         var map = new TmxMap(mapFilePath);
         _roomBounds = new Rectangle(0, 0, map.Width * map.TileWidth, map.Height * map.TileHeight);
         var collisionLayer = map.ObjectGroups["collisions"];
+
         foreach (var obj in collisionLayer.Objects)
-        { _collisionRects.Add(new Rectangle((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height)); }
-        _position_pj = new Vector2(400, 10);
+        {
+            _collisionRects.Add(new Rectangle((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height));
+        }
+        _position_pj = new Vector2(600, 10);
         _texturaDebug = new Texture2D(Core.GraphicsDevice, 1, 1);
         _texturaDebug.SetData(new[] { Color.White });
         _debugSuelo = new Rectangle(0, 450, _roomBounds.Width, 50);
@@ -204,9 +214,8 @@ public class GameScene : Scene
         ApplyPhysics(gameTime);
         handleLegsAnimation();
         handleChestAnimation();
-        _spiderAnimation.Play("spider_walking");
-        _davidLegs.Play(_legState);
-        _davidChest.Play(_chestState);
+        handleSpiderAnimation();
+
         _davidLegs.Update(gameTime);
         _davidChest.Update(gameTime);
         _spiderAnimation.Update(gameTime);
@@ -231,15 +240,36 @@ public class GameScene : Scene
         KeyboardInfo keyboard = Core.Input.Keyboard;
         if (keyboard.WasKeyJustPressed(Keys.Escape))
         { Core.ChangeScene(new TitleScene()); }
+
+        // Reset states
         isMovingHorizontally = false;
         isDucking = false;
         isShooting = false;
         isAimingUp = false;
-        if (keyboard.IsKeyDown(Keys.S) && !_isJumping)
-        { isDucking = true; }
-        if (keyboard.IsKeyDown(Keys.W) && !_isJumping)
+        isAimingDown = false; // <-- NEW
+
+        // 1. Check Aiming/Ducking states
+        if (keyboard.IsKeyDown(Keys.W))
         { isAimingUp = true; }
-        if (!isDucking && !isAimingUp)
+
+        // --- ¡CAMBIO! ---
+        // S ahora tiene doble función
+        if (keyboard.IsKeyDown(Keys.S))
+        {
+            if (!_isJumping)
+            {
+                isDucking = true; // En el suelo, S = Agacharse
+            }
+            else
+            {
+                isAimingDown = true; // En el aire, S = Apuntar Abajo
+            }
+        }
+
+        // --- ¡CAMBIO! ---
+        // El bloque de movimiento AHORA permite moverse mientras se apunta.
+        // Solo se bloquea si estás AGRACHADO (isDucking).
+        if (!isDucking)
         {
             if (keyboard.IsKeyDown(Keys.A))
             {
@@ -254,78 +284,309 @@ public class GameScene : Scene
                 _davidChest.Effects = SpriteEffects.None;
             }
         }
+        // --- FIN DEL CAMBIO ---
+
+        // 3. Check Actions
         if (keyboard.IsKeyDown(Keys.H))
         { isShooting = true; }
-        if (keyboard.WasKeyJustPressed(Keys.R) && !_isJumping && !isDucking)
+
+        // El 'if' original ya previene saltar mientras estás agachado (isDucking)
+        if (keyboard.IsKeyDown(Keys.J) && !_isJumping && !isDucking)
         { _velocity_pj.Y = _jumpSpeed; _isJumping = true; }
     }
     private void ApplyPhysics(GameTime gameTime)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        _velocity_pj.Y += _gravity * deltaTime;
-        _velocity_pj.Y = MathHelper.Clamp(_velocity_pj.Y, -_jumpSpeed * 2, _gravity * 2f);
+
+        // --- 1. ACTUALIZAR VELOCIDAD X (basado en HandleInput) ---
         if (isMovingHorizontally)
-        { _velocity_pj.X = (_davidLegs.Effects == SpriteEffects.FlipHorizontally) ? -_speed : _speed; }
+        {
+            _velocity_pj.X = (_davidLegs.Effects == SpriteEffects.FlipHorizontally) ? -_speed : _speed;
+        }
         else
-        { _velocity_pj.X = 0; }
+        {
+            _velocity_pj.X = 0; // Detenerse
+        }
+
+        // --- 2. APLICAR GRAVEDAD (Y) ---
+        // --- ¡¡ARREGLO #1!! ---
+
+        // Si NO estamos saltando (es decir, estábamos en el suelo el frame anterior)
+        if (!_isJumping)
+        {
+            // Pégate al suelo. Esto anula cualquier gravedad residual.
+            _velocity_pj.Y = 0f;
+        }
+        else // Si ESTAMOS saltando (en el aire)
+        {
+            // Aplica gravedad normalmente
+            _velocity_pj.Y += _gravity * deltaTime;
+        }
+
+        // Limita la velocidad de caída y de subida
+        _velocity_pj.Y = MathHelper.Clamp(_velocity_pj.Y, _jumpSpeed, _gravity * 2f);
+
+        // --- 3. MANEJAR COLISIONES POR EJE ---
+        HandleHorizontalCollisions(deltaTime);
+        HandleVerticalCollisions(deltaTime);
+    }
+    // 2. Nuevo método para colisiones HORIZONTALES
+    private void HandleHorizontalCollisions(float deltaTime)
+    {
         _position_pj.X += _velocity_pj.X * deltaTime;
-        _position_pj.Y += _velocity_pj.Y * deltaTime;
         UpdateHitbox();
-        bool isGrounded = false;
+
         foreach (Rectangle rect in _collisionRects)
         {
-            if (_davidHitbox.Intersects(rect) && _velocity_pj.Y >= 0)
+            // --- ¡ARREGLO #2! ---
+            // Asumimos que las paredes son más altas que anchas
+            bool isWall = rect.Height > rect.Width;
+
+            // Solo comprueba colisiones con PAREDES
+            if (isWall && _davidHitbox.Intersects(rect))
             {
-                isGrounded = true;
-                _velocity_pj.Y = 0;
-                _position_pj.Y = rect.Top - _constLegsHeight + 1;
+                if (_velocity_pj.X > 0) // Si se movía a la derecha
+                {
+                    float anchorX = _davidLegs.Origin.X * _davidLegs.Scale.X;
+                    _position_pj.X = rect.Left - (_davidHitbox.Width - anchorX);
+                }
+                else if (_velocity_pj.X < 0) // Si se movía a la izquierda
+                {
+                    float anchorX = _davidLegs.Origin.X * _davidLegs.Scale.X;
+                    _position_pj.X = rect.Right + anchorX;
+                }
+                _velocity_pj.X = 0;
                 UpdateHitbox();
-                break;
             }
         }
+    }
+
+    // 3. Nuevo método para colisiones VERTICALES
+    private void HandleVerticalCollisions(float deltaTime)
+    {
+        _position_pj.Y += _velocity_pj.Y * deltaTime;
+        UpdateHitbox();
+
+        bool isGrounded = false;
+
+        foreach (Rectangle rect in _collisionRects)
+        {
+            // --- ¡ARREGLO #3! (Parte A) ---
+            // Asumimos que el suelo/techo es más ancho que alto
+            bool isGround = rect.Width > rect.Height;
+
+            // Solo comprueba colisiones con SUELO/TECHO
+            if (isGround && _davidHitbox.Intersects(rect))
+            {
+                // Usamos >= 0 porque gracias al Arreglo #1, la velocidad será 0 
+                // cuando estemos en el suelo
+                if (_velocity_pj.Y >= 0)
+                {
+                    isGrounded = true;
+                    _velocity_pj.Y = 0;
+
+                    // --- ¡ARREGLO #3! (Parte B) ---
+                    // Te "pegamos" 1 píxel DENTRO del suelo
+                    float desiredBottom = rect.Top + 1;
+                    _position_pj.Y = desiredBottom - _constLegsHeight;
+                }
+                else if (_velocity_pj.Y < 0) // Golpeando techo
+                {
+                    _velocity_pj.Y = 0;
+                    _position_pj.Y = rect.Bottom + _constTorsoHeight;
+                }
+                UpdateHitbox();
+            }
+        }
+
         _isJumping = !isGrounded;
     }
     private void UpdateHitbox()
     {
-        _davidHitbox.Width = (int)_constHitboxWidth;
+        // 1. Ajustar el tamaño de la hitbox si está agachado
         if (isDucking)
-        { _davidHitbox.Height = (int)(_constTorsoHeight + (_constLegsHeight * 0.6f)); }
+        {
+            // (Asumimos que la hitbox de agachado es 60% de la altura de las piernas)
+            _davidHitbox.Height = (int)(_constTorsoHeight + (_constLegsHeight * 0.6f));
+        }
         else
-        { _davidHitbox.Height = (int)_constHitboxHeight; }
-        _davidHitbox.X = (int)(_position_pj.X - (_davidHitbox.Width / 2f));
-        float feetY = _position_pj.Y + _constLegsHeight;
-        _davidHitbox.Y = (int)(feetY - _davidHitbox.Height);
+        {
+            // Altura normal (parado o saltando)
+            _davidHitbox.Height = (int)_constHitboxHeight;
+        }
+        _davidHitbox.Width = (int)_constHitboxWidth;
+
+        // --- 2. Calcular X (Centrado en la Cintura) ---
+        // (Posición X) - (Origen X de las Piernas * Escala)
+        _davidHitbox.X = (int)(_position_pj.X - (_davidLegs.Origin.X * _davidLegs.Scale.X));
+
+        // --- 3. Calcular Y (Anclado a la Cintura) ---
+        // (Posición Y) - (Origen Y del Torso * Escala)
+        _davidHitbox.Y = (int)(_position_pj.Y - (_davidChest.Origin.Y * _davidChest.Scale.Y));
     }
     public void handleChestAnimation()
     {
-        if (_isJumping) { _chestState = "jump-torso"; }
-        else if (isDucking)
+        // 1. Determina cuál debería ser el estado
+        string newState;
+
+        if (_isJumping)
         {
-            if (isShooting) { _chestState = "duck-shoot-torso"; }
-            else if (isMovingHorizontally) { _chestState = "duck-walk-torso"; }
-            else { _chestState = "duck-torso"; }
+            if (isAimingUp) // Prioridad 1: Apuntar arriba (aire)
+            {
+                if (isShooting) { newState = "shoot-up-torso"; }
+                else { newState = "up-torso"; }
+            }
+            else if (isAimingDown) // Prioridad 2: Apuntar abajo (aire)
+            {
+                if (isShooting) { newState = "shoot-down-torso"; }
+                else
+                {
+                    // CORRECCIÓN: Tu XML no define "down-torso", así que volvemos
+                    // a "jump-torso" si no estás disparando.
+                    newState = "jump-torso";
+                }
+            }
+            // --- ¡NUEVA LÓGICA AÑADIDA! ---
+            else if (isShooting) // Prioridad 3: Disparar horizontal (aire)
+            {
+                // Usa la misma animación de disparar que en el suelo
+                newState = "shoot-torso";
+            }
+            // --- FIN DE LA LÓGICA AÑADIDA ---
+            else // Prioridad 4: Salto normal (sin disparar)
+            {
+                newState = "jump-torso";
+            }
         }
-        else if (isAimingUp)
+        else if (isDucking) // En el suelo y agachado
         {
-            if (isShooting) { _chestState = "shoot-up-torso"; }
-            else { _chestState = "idle-torso"; }
+            if (isShooting)
+            {
+                if (isMovingHorizontally)
+                {
+                    newState = "shoot-down-torso";
+                }
+                else
+                {
+                    newState = "duck-shoot-torso";
+                }
+            }
+            else if (isMovingHorizontally)
+            {
+                newState = "duck-walk-torso";
+            }
+            else
+            {
+                newState = "duck-torso";
+            }
         }
-        else if (isShooting) { _chestState = "shoot-torso"; }
-        else if (isMovingHorizontally) { _chestState = "run-torso"; }
-        else { _chestState = "idle-torso"; }
+        else if (isAimingUp) // En el suelo y apuntando arriba
+        {
+            if (isShooting) { newState = "shoot-up-torso"; }
+            else { newState = "up-torso"; }
+        }
+        else if (isShooting) // En el suelo, disparando de frente
+        {
+            newState = "shoot-torso";
+        }
+        else if (isMovingHorizontally) // En el suelo, corriendo
+        {
+            newState = "run-torso";
+        }
+        else // En el suelo, quieto
+        {
+            newState = "idle-torso";
+        }
+
+
+        // 2. ¡LA MAGIA! Solo actualiza si el estado cambió.
+        if (newState != _chestState)
+        {
+            _chestState = newState;
+
+            // --- Lógica de Loop (No necesita cambios) ---
+
+            bool shouldLoop = (newState == "idle-torso" ||
+                               newState == "run-torso" ||
+                               newState == "jump-torso" ||
+                               newState == "duck-walk-torso" ||
+                               newState == "duck-torso" ||
+                               newState == "up-torso" ||
+                               newState == "shoot-torso" ||
+                               newState == "shoot-up-torso" ||
+                               newState == "shoot-down-torso"
+                               );
+
+            if (_davidChest.Animations.ContainsKey(_chestState))
+            {
+                _davidChest.Animations[_chestState].IsLooping = shouldLoop;
+            }
+
+            _davidChest.Play(_chestState);
+        }
     }
+
     public void handleLegsAnimation()
     {
-        if (_isJumping) { _legState = "jump-legs"; }
-        else if (isDucking)
+        // 1. Determina cuál debería ser el estado
+        string newState;
+
+        if (_isJumping) // <-- Prioridad 1: Saltando
         {
-            if (isShooting) { _legState = "duck-shoot-legs"; }
-            else if (isMovingHorizontally) { _legState = "duck-walk-legs"; }
-            else { _legState = "duck-legs"; }
+            newState = "jump-legs";
         }
-        else if (isAimingUp) { _legState = "idle-legs"; }
-        else if (isMovingHorizontally) { _legState = "run-legs"; }
-        else { _legState = "idle-legs"; }
+        else if (isDucking) // <-- Prioridad 2: Agachado (maneja duck-walk)
+        {
+            if (isShooting) { newState = "duck-shoot-legs"; }
+            else if (isMovingHorizontally) { newState = "duck-walk-legs"; }
+            else { newState = "duck-legs"; }
+        }
+        else if (isMovingHorizontally) // <-- ¡CAMBIO! Prioridad 3: Correr
+        {
+
+            newState = "run-legs";
+        }
+        else if (isAimingUp) // <-- Prioridad 4: Apuntar arriba (quieto)
+        {
+            newState = "idle-legs";
+        }
+        else // <-- Prioridad 5: Quieto
+        {
+            newState = "idle-legs";
+        }
+
+
+        // 2. ¡LA MAGIA! Solo actualiza si el estado cambió.
+        if (newState != _legState)
+        {
+            _legState = newState;
+
+            // --- Lógica de Loop (ya estaba bien) ---
+            bool shouldLoop = (newState == "idle-legs" ||
+                               newState == "run-legs" ||
+                               newState == "jump-legs" ||
+                               newState == "duck-walk-legs" ||
+                               newState == "duck-legs");
+
+            if (_davidLegs.Animations.ContainsKey(_legState))
+            {
+                _davidLegs.Animations[_legState].IsLooping = shouldLoop;
+            }
+
+            _davidLegs.Play(_legState);
+        }
+    }
+    private void handleSpiderAnimation()
+    {
+        // Por ahora, la araña siempre está en este estado
+        string newState = "spider_vomit";
+
+        // Solo llamamos a .Play() si el estado ha cambiado
+        if (newState != _spiderState)
+        {
+            _spiderState = newState;
+            _spiderAnimation.Play(_spiderState);
+        }
     }
     private void DibujarBordeRectangulo(Rectangle rect, Color color, int grosor)
     {
@@ -342,8 +603,8 @@ public class GameScene : Scene
         Core.GraphicsDevice.Clear(Color.Black);
 
         Core.SpriteBatch.Begin(
-            samplerState: SamplerState.PointClamp,
-            transformMatrix: _camera.GetViewMatrix(Core.GraphicsDevice.Viewport)
+          samplerState: SamplerState.PointClamp,
+          transformMatrix: _camera.GetViewMatrix(Core.GraphicsDevice.Viewport)
         );
 
         Core.SpriteBatch.Draw(_background, Vector2.Zero, Color.White);
@@ -351,7 +612,7 @@ public class GameScene : Scene
 
         Vector2 finalDrawPosition = _position_pj;
 
-        // Ajuste vertical por agacharse (tu lógica original)
+        // Ajuste vertical por agacharse (Esta lógica está bien)
         if (isDucking)
         {
             float scaledStandingLegsHeight = _constLegsHeight;
@@ -360,59 +621,35 @@ public class GameScene : Scene
             finalDrawPosition.Y += yOffset;
         }
 
-        // 1. Obtener los nombres de los fotogramas actuales
+        // --- ¡¡LÓGICA DE DIBUJO SIMPLIFICADA!! ---
+
+        // 1. Obtener los nombres de los fotogramas (¡Con protección anti-crash!)
         string legFrameName = _davidLegs.Region?.Name ?? "";
         string torsoFrameName = _davidChest.Region?.Name ?? "";
 
-        // 2. Obtener los offsets BASE de los diccionarios por nombre de fotograma
+        // 2. Obtener los offsets BASE (para ajustes manuales finos)
         Vector2 legOffsetFromDict = _legsFrameOffsets.GetValueOrDefault(legFrameName, Vector2.Zero);
         Vector2 torsoOffsetFromDict = _torsoFrameOffsets.GetValueOrDefault(torsoFrameName, Vector2.Zero);
 
-        // 3. Obtener el ancho real de la textura del frame actual
-        float currentLegsWidth = _davidLegs.Region.Width;
-        float currentTorsoWidth = _davidChest.Region.Width;
+        // 3. ¡LISTO! El 'Origin' (Píxel 11) se alineará con 'finalDrawPosition'
+        // Solo necesitamos sumar el offset del diccionario
 
-        // 4. Obtener el Origin (ancla) que definimos en LoadContent (el 50% del frame IDLE)
-        float baseLegsOriginX = _davidLegs.Origin.X;
-        float baseTorsoOriginX = _davidChest.Origin.X;
+        Vector2 legsDrawPos = finalDrawPosition + (legOffsetFromDict * _davidLegs.Scale);
+        Vector2 chestDrawPos = finalDrawPosition + (torsoOffsetFromDict * _davidChest.Scale);
 
-        // 5. Calcular la corrección para que el PIXEL 11 (tu hebilla) sea el centro real
-        // Esto es la magia: no importa el ancho de la imagen, siempre pivotamos sobre el PIXEL 11
-        float pivotX = 11f; // <--- ¡TU PUNTO DE ANCLA DEFINITIVO (Píxel 11)!
-
-        // Corrección de posición horizontal para las piernas
-        float legsCorrectionX = (currentLegsWidth / 2f) - pivotX;
-        if (_davidLegs.Effects == SpriteEffects.FlipHorizontally)
-        {
-            legsCorrectionX *= -1; // Invierte si está volteado
-            legsCorrectionX += currentLegsWidth - (2 * pivotX); // Corrección extra para que el flip sea perfecto desde el pixel 11
-        }
-
-        // Corrección de posición horizontal para el torso
-        float torsoCorrectionX = (currentTorsoWidth / 2f) - pivotX;
-        if (_davidChest.Effects == SpriteEffects.FlipHorizontally)
-        {
-            torsoCorrectionX *= -1; // Invierte si está volteado
-            torsoCorrectionX += currentTorsoWidth - (2 * pivotX); // Corrección extra para que el flip sea perfecto desde el pixel 11
-        }
-
-        // 6. Combinar el offset manual del diccionario con la corrección automática
-        Vector2 legsFinalOffset = legOffsetFromDict + new Vector2(legsCorrectionX, 0);
-        Vector2 torsoFinalOffset = torsoOffsetFromDict + new Vector2(torsoCorrectionX, 0);
-
-        // 7. Aplicar offsets a la posición de dibujo (¡ya están escalados!)
-        Vector2 legsDrawPos = finalDrawPosition + (legsFinalOffset * _davidLegs.Scale);
-        Vector2 chestDrawPos = finalDrawPosition + (torsoFinalOffset * _davidChest.Scale);
-
-        // 8. Dibujar
+        // 4. Dibujar
+        // (MonoGame alinea _davidLegs.Origin con legsDrawPos automáticamente)
         _davidLegs.Draw(Core.SpriteBatch, legsDrawPos);
         _davidChest.Draw(Core.SpriteBatch, chestDrawPos);
 
+
         // --- DIBUJO DE DEBUG ---
-        DibujarBordeRectangulo(_davidHitbox, Color.Cyan, 2);
+        if (_isJumping)
+            DibujarBordeRectangulo(_davidHitbox, Color.Red, 2);
+        else
+            DibujarBordeRectangulo(_davidHitbox, Color.LimeGreen, 2);
+
         DibujarBordeRectangulo(_spiderHitbox, Color.Red, 2);
-
-
         Core.SpriteBatch.End();
     }
 }

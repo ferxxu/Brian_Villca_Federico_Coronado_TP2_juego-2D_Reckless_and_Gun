@@ -10,19 +10,25 @@ public class AnimatedSprite : Sprite
     private int _currentFrame;
     private TimeSpan _elapsed;
     private Animation _currentAnimation;
-    private Dictionary<string, Animation> _animations;
+
+    // --- ¡CAMBIO 1! ---
+    // Hecho público (con "public") para que GameScene.cs pueda acceder a él
+    public Dictionary<string, Animation> Animations;
+
     public string CurrentAnimationName => _currentAnimation?.Name;
 
     public AnimatedSprite()
     {
-        _animations = new Dictionary<string, Animation>();
-    }
+        // --- ¡CAMBIO 2! ---
+        Animations = new Dictionary<string, Animation>(); // Usar la propiedad pública
+    }
 
     public void AddAnimation(string name, Animation animation)
     {
-        _animations[name] = animation;
+        // --- ¡CAMBIO 3! ---
+        Animations[name] = animation; // Usar la propiedad pública
 
-        if (_currentAnimation == null)
+        if (_currentAnimation == null)
         {
             Play(name);
         }
@@ -32,23 +38,23 @@ public class AnimatedSprite : Sprite
     {
         if (CurrentAnimationName == name)
         {
-            return; 
+            return;
         }
 
-        if (!_animations.ContainsKey(name))
-        {
+        // --- ¡CAMBIO 4! ---
+        if (!Animations.ContainsKey(name)) // Usar la propiedad pública
+        {
             Console.WriteLine($"Error: No se encontró la animación '{name}'");
-            return; 
+            return;
         }
 
-        _currentAnimation = _animations[name];
-        _currentFrame = 0;
+        _currentAnimation = Animations[name]; // Usar la propiedad pública
+        _currentFrame = 0;
         _elapsed = TimeSpan.Zero;
 
         if (_currentAnimation.Frames.Count > 0)
         {
             Region = _currentAnimation.Frames[0];
-            // NOTA: El 'Origin' base se establece en GameScene.cs
         }
     }
     public void Update(GameTime gameTime)
@@ -64,11 +70,20 @@ public class AnimatedSprite : Sprite
 
             if (_currentFrame >= _currentAnimation.Frames.Count)
             {
-                _currentFrame = 0;
+                // --- ¡¡CAMBIO 5: LA LÓGICA DE LOOP!! ---
+                // (Esto asume que tu clase 'Animation' tiene una propiedad 'IsLooping')
+                if (_currentAnimation.IsLooping)
+                {
+                    _currentFrame = 0; // Si loopea, vuelve al inicio
+                }
+                else
+                {
+                    // Si no, se queda en el último fotograma
+                    _currentFrame = _currentAnimation.Frames.Count - 1;
+                }
             }
 
             Region = _currentAnimation.Frames[_currentFrame];
-            // NOTA: El 'Origin' base se establece en GameScene.cs
         }
     }
 }
