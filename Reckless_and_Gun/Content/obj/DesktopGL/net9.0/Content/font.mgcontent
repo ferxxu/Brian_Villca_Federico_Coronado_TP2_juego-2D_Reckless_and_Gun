@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/font.spritefont</SourceFile>
-  <SourceTime>2025-11-13T20:56:40.9814871-03:00</SourceTime>
-  <DestFile>C:/Users/feder/OneDrive/Documentos/MonoGame/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Content/font.xnb</DestFile>
-  <DestTime>2025-11-13T20:58:38.2805936-03:00</DestTime>
+  <SourceFile>C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/font.spritefont</SourceFile>
+  <SourceTime>2025-11-13T22:50:10.778664-03:00</SourceTime>
+  <DestFile>C:/Users/brian/Desktop/juego/Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun/Reckless_and_Gun/Content/bin/DesktopGL/Content/font.xnb</DestFile>
+  <DestTime>2025-11-13T22:51:11.961484-03:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2025-10-20T11:25:32-03:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

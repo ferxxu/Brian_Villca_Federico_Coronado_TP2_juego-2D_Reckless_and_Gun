@@ -6,11 +6,11 @@
      <Region name="torso_idle_0" x="0" y="0" width="121" height="43" />
      <Region name="torso_run_0" x="121" y="0" width="121" height="43" />
      <Region name="torso_run_1" x="241" y="0" width="121" height="43" />
-     <Region name="torso_jump_0" x="158" y="0" width="121" height="43" />
-     <Region name="torso_jump_1" x="202" y="0" width="121" height="43" />
-     <Region name="torso_jump_2" x="246" y="2" width="121" height="43" />
-     <Region name="torso_jump_3" x="288" y="2" width="121" height="43" />
-     <Region name="torso_jump_4" x="328" y="2" width="121" height="43" />
+     <Region name="torso_jump_0" x="0" y="220" width="121" height="43" />
+     <Region name="torso_jump_1" x="121" y="220" width="121" height="43" />
+     <Region name="torso_jump_2" x="241" y="220" width="121" height="42" />
+     <Region name="torso_jump_3" x="361" y="220" width="121" height="42" />
+     <Region name="torso_jump_4" x="482" y="220" width="121" height="42" />
      <Region name="torso_shoot_0" x="0" y="138" width="121" height="43" />
      <Region name="torso_shoot_1" x="121" y="138" width="121" height="43" />
      <Region name="torso_shoot_2" x="241" y="138" width="121" height="43" />

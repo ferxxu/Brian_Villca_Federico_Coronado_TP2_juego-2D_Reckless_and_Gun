@@ -89,9 +89,7 @@ C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckles
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\david1.xml
 <<<<<<< HEAD
 C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\david2.xml
-C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\david_edited_censure.xnb
 =======
-C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\david_editedv2 (1).xnb
 C:\Users\feder\OneDrive\Documentos\MonoGame\TestGame\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\atlas-definition.xml
 C:\Users\feder\OneDrive\Documentos\MonoGame\TestGame\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\beach_map.tmx
 C:\Users\feder\OneDrive\Documentos\MonoGame\TestGame\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\david.xml
@@ -149,3 +147,6 @@ C:\Users\feder\OneDrive\Documentos\MonoGame\Brian_Villca_Federico_Coronado_TP2_j
 C:\Users\feder\OneDrive\Documentos\MonoGame\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\spider.xml
 C:\Users\feder\OneDrive\Documentos\MonoGame\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\david_edited_censure.xnb
 C:\Users\feder\OneDrive\Documentos\MonoGame\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\spider_edited.xnb
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\spider.xml
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\spider_edited.xnb
+C:\Users\brian\Desktop\juego\Brian_Villca_Federico_Coronado_TP2_juego-2D_Reckless_and_Gun\Reckless_and_Gun\bin\Debug\net9.0\Content\david_edited_censure (1).xnb
