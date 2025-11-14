@@ -485,7 +485,7 @@ public class GameScene : Scene
             else if (isAimingDown)
             {
                 if (isShooting) { newState = "shoot-down-torso"; }
-                else { newState = "run-torso"; } // Salto quieto sin apuntar
+                else { newState = "down-torso"; } // Salto quieto sin apuntar
             }
             else if (isShooting)
             {
@@ -506,7 +506,7 @@ public class GameScene : Scene
             else if (isAimingDown)
             {
                 if (isShooting) { newState = "shoot-down-torso"; }
-                else { newState = "jump-torso"; }
+                else { newState = "down-torso"; }
             }
             else if (isShooting) 
             {
