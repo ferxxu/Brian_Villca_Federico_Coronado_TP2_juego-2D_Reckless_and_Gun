@@ -240,7 +240,7 @@ public class GameScene : Scene
         KeyboardInfo keyboard = Core.Input.Keyboard;
         if (keyboard.WasKeyJustPressed(Keys.Escape))
         { Core.ChangeScene(new TitleScene()); }
-        
+
         // Reset states
         isMovingHorizontally = false;
         isDucking = false;
@@ -249,7 +249,7 @@ public class GameScene : Scene
         isAimingDown = false; // <-- NEW
 
         // 1. Check Aiming/Ducking states
-        if (keyboard.IsKeyDown(Keys.W)) 
+        if (keyboard.IsKeyDown(Keys.W))
         { isAimingUp = true; }
 
         // --- ¡CAMBIO! ---
@@ -265,11 +265,11 @@ public class GameScene : Scene
                 isAimingDown = true; // En el aire, S = Apuntar Abajo
             }
         }
-        
+
         // --- ¡CAMBIO! ---
         // El bloque de movimiento AHORA permite moverse mientras se apunta.
         // Solo se bloquea si estás AGRACHADO (isDucking).
-        if (!isDucking) 
+        if (!isDucking)
         {
             if (keyboard.IsKeyDown(Keys.A))
             {
@@ -289,7 +289,7 @@ public class GameScene : Scene
         // 3. Check Actions
         if (keyboard.IsKeyDown(Keys.H))
         { isShooting = true; }
-        
+
         // El 'if' original ya previene saltar mientras estás agachado (isDucking)
         if (keyboard.IsKeyDown(Keys.J) && !_isJumping && !isDucking)
         { _velocity_pj.Y = _jumpSpeed; _isJumping = true; }
@@ -309,39 +309,42 @@ public class GameScene : Scene
         }
 
         // --- 2. APLICAR GRAVEDAD (Y) ---
-        // La gravedad SIEMPRE se aplica si no estamos en el suelo
-        // Opcional: si _isJumping es true, aplica gravedad.
-        _velocity_pj.Y += _gravity * deltaTime;
+        // --- ¡¡ARREGLO #1!! ---
+
+        // Si NO estamos saltando (es decir, estábamos en el suelo el frame anterior)
+        if (!_isJumping)
+        {
+            // Pégate al suelo. Esto anula cualquier gravedad residual.
+            _velocity_pj.Y = 0f;
+        }
+        else // Si ESTAMOS saltando (en el aire)
+        {
+            // Aplica gravedad normalmente
+            _velocity_pj.Y += _gravity * deltaTime;
+        }
 
         // Limita la velocidad de caída y de subida
         _velocity_pj.Y = MathHelper.Clamp(_velocity_pj.Y, _jumpSpeed, _gravity * 2f);
 
         // --- 3. MANEJAR COLISIONES POR EJE ---
-        // (Llamamos a los nuevos métodos)
         HandleHorizontalCollisions(deltaTime);
-
-        float velocityY_beforeCollision = _velocity_pj.Y;
-
         HandleVerticalCollisions(deltaTime);
-
-        if (!_isJumping && velocityY_beforeCollision > 0)
-        {
-            _velocity_pj.Y = 0f; // <-- Esta es la corrección final
-        }
     }
     // 2. Nuevo método para colisiones HORIZONTALES
     private void HandleHorizontalCollisions(float deltaTime)
     {
-        // Mover en X
         _position_pj.X += _velocity_pj.X * deltaTime;
-        UpdateHitbox(); // Actualiza la hitbox a la nueva posición X
+        UpdateHitbox();
 
-        // Comprobar colisiones en X
         foreach (Rectangle rect in _collisionRects)
         {
-            if (_davidHitbox.Intersects(rect))
+            // --- ¡ARREGLO #2! ---
+            // Asumimos que las paredes son más altas que anchas
+            bool isWall = rect.Height > rect.Width;
+
+            // Solo comprueba colisiones con PAREDES
+            if (isWall && _davidHitbox.Intersects(rect))
             {
-                // ¡Colisión X!
                 if (_velocity_pj.X > 0) // Si se movía a la derecha
                 {
                     float anchorX = _davidLegs.Origin.X * _davidLegs.Scale.X;
@@ -352,8 +355,8 @@ public class GameScene : Scene
                     float anchorX = _davidLegs.Origin.X * _davidLegs.Scale.X;
                     _position_pj.X = rect.Right + anchorX;
                 }
-                _velocity_pj.X = 0; // Detiene el movimiento horizontal
-                UpdateHitbox(); // Actualiza la hitbox a la posición X corregida
+                _velocity_pj.X = 0;
+                UpdateHitbox();
             }
         }
     }
@@ -361,38 +364,41 @@ public class GameScene : Scene
     // 3. Nuevo método para colisiones VERTICALES
     private void HandleVerticalCollisions(float deltaTime)
     {
-        // Mover en Y
         _position_pj.Y += _velocity_pj.Y * deltaTime;
-        UpdateHitbox(); // Actualiza la hitbox a la nueva posición Y
+        UpdateHitbox();
 
-        bool isGrounded = false; // Asumir que estamos en el aire
+        bool isGrounded = false;
 
-        // Comprobar colisiones en Y
         foreach (Rectangle rect in _collisionRects)
         {
-            // Comprueba la intersección con CUALQUIER objeto.
-            if (_davidHitbox.Intersects(rect))
+            // --- ¡ARREGLO #3! (Parte A) ---
+            // Asumimos que el suelo/techo es más ancho que alto
+            bool isGround = rect.Width > rect.Height;
+
+            // Solo comprueba colisiones con SUELO/TECHO
+            if (isGround && _davidHitbox.Intersects(rect))
             {
-                if (_velocity_pj.Y > 0) // Si estaba cayendo (colisión con SUELO)
+                // Usamos >= 0 porque gracias al Arreglo #1, la velocidad será 0 
+                // cuando estemos en el suelo
+                if (_velocity_pj.Y >= 0)
                 {
                     isGrounded = true;
                     _velocity_pj.Y = 0;
 
-                    // Pegado al suelo (Corregido de antes)
-                    _position_pj.Y = rect.Top - _constLegsHeight;
+                    // --- ¡ARREGLO #3! (Parte B) ---
+                    // Te "pegamos" 1 píxel DENTRO del suelo
+                    float desiredBottom = rect.Top + 1;
+                    _position_pj.Y = desiredBottom - _constLegsHeight;
                 }
-                else if (_velocity_pj.Y < 0) // Si estaba subiendo (golpe de CABEZA)
+                else if (_velocity_pj.Y < 0) // Golpeando techo
                 {
                     _velocity_pj.Y = 0;
-
-                    // Pegado al techo (Corregido de antes)
                     _position_pj.Y = rect.Bottom + _constTorsoHeight;
                 }
-                UpdateHitbox(); // Actualiza la hitbox a la posición Y corregida
+                UpdateHitbox();
             }
         }
 
-        // --- ACTUALIZAR ESTADO DE SALTO ---
         _isJumping = !isGrounded;
     }
     private void UpdateHitbox()
@@ -418,7 +424,7 @@ public class GameScene : Scene
         // (Posición Y) - (Origen Y del Torso * Escala)
         _davidHitbox.Y = (int)(_position_pj.Y - (_davidChest.Origin.Y * _davidChest.Scale.Y));
     }
-  public void handleChestAnimation()
+    public void handleChestAnimation()
     {
         // 1. Determina cuál debería ser el estado
         string newState;
@@ -432,19 +438,19 @@ public class GameScene : Scene
             }
             else if (isAimingDown) // Prioridad 2: Apuntar abajo (aire)
             {
-                if (isShooting) { newState = "shoot-down-torso"; } 
-                else 
-                { 
+                if (isShooting) { newState = "shoot-down-torso"; }
+                else
+                {
                     // CORRECCIÓN: Tu XML no define "down-torso", así que volvemos
                     // a "jump-torso" si no estás disparando.
-                    newState = "jump-torso"; 
+                    newState = "jump-torso";
                 }
             }
             // --- ¡NUEVA LÓGICA AÑADIDA! ---
             else if (isShooting) // Prioridad 3: Disparar horizontal (aire)
             {
                 // Usa la misma animación de disparar que en el suelo
-                newState = "shoot-torso"; 
+                newState = "shoot-torso";
             }
             // --- FIN DE LA LÓGICA AÑADIDA ---
             else // Prioridad 4: Salto normal (sin disparar)
@@ -458,11 +464,11 @@ public class GameScene : Scene
             {
                 if (isMovingHorizontally)
                 {
-                    newState = "shoot-down-torso"; 
+                    newState = "shoot-down-torso";
                 }
                 else
                 {
-                    newState = "duck-shoot-torso"; 
+                    newState = "duck-shoot-torso";
                 }
             }
             else if (isMovingHorizontally)
@@ -499,23 +505,23 @@ public class GameScene : Scene
             _chestState = newState;
 
             // --- Lógica de Loop (No necesita cambios) ---
-            
+
             bool shouldLoop = (newState == "idle-torso" ||
                                newState == "run-torso" ||
                                newState == "jump-torso" ||
-                               newState == "duck-walk-torso" || 
-                               newState == "duck-torso" ||      
-                               newState == "up-torso"||
-                               newState == "shoot-torso"||
-                               newState == "shoot-up-torso"||
+                               newState == "duck-walk-torso" ||
+                               newState == "duck-torso" ||
+                               newState == "up-torso" ||
+                               newState == "shoot-torso" ||
+                               newState == "shoot-up-torso" ||
                                newState == "shoot-down-torso"
-                               );      
+                               );
 
             if (_davidChest.Animations.ContainsKey(_chestState))
             {
                 _davidChest.Animations[_chestState].IsLooping = shouldLoop;
             }
-            
+
             _davidChest.Play(_chestState);
         }
     }
@@ -538,7 +544,7 @@ public class GameScene : Scene
         else if (isMovingHorizontally) // <-- ¡CAMBIO! Prioridad 3: Correr
         {
 
-            newState = "run-legs"; 
+            newState = "run-legs";
         }
         else if (isAimingUp) // <-- Prioridad 4: Apuntar arriba (quieto)
         {
