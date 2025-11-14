@@ -52,6 +52,7 @@ public class GameScene : Scene
     private bool isAimingUp;
     private bool isAimingDown;
     private bool _isDuckingTransitionDone = false;
+    private bool _isStandingJump = false;
 
     // --- Constantes de Física ---
     private const float _speed = 150f;
@@ -304,7 +305,20 @@ public class GameScene : Scene
         { isShooting = true; }
 
         if (keyboard.IsKeyDown(Keys.J) && !_isJumping && !isDucking)
-        { _velocity_pj.Y = _jumpSpeed; _isJumping = true; }
+    { 
+        _velocity_pj.Y = _jumpSpeed; 
+        _isJumping = true; 
+
+        // Si NO nos estábamos moviendo, es un salto quieto.
+        if (!isMovingHorizontally)
+        {
+            _isStandingJump = true;
+        }
+        else
+        {
+            _isStandingJump = false; // Es un salto corriendo
+        }
+    }
     }
     private void ApplyPhysics(GameTime gameTime)
     {
@@ -412,6 +426,10 @@ public class GameScene : Scene
         }
 
         _isJumping = !isGrounded;
+        if (!_isJumping) 
+    {
+        _isStandingJump = false; 
+    }
     }
 
     private void UpdateHitbox()
@@ -455,29 +473,51 @@ public class GameScene : Scene
 
     if (_isJumping)
     {
-        if (isAimingUp) // Prioridad 1: Apuntar arriba (aire)
+
+        if (_isStandingJump)
         {
-            if (isShooting) { newState = "shoot-up-torso"; }
-            else { newState = "up-torso"; }
-        }
-        else if (isAimingDown) // Prioridad 2: Apuntar abajo (aire)
-        {
-            if (isShooting) { newState = "shoot-down-torso"; }
+            // Revisa si apunta/dispara (puedes usar las animaciones de salto quieto)
+            if (isAimingUp)
+            {
+                if (isShooting) { newState = "shoot-up-torso"; }
+                else { newState = "up-torso"; }
+            }
+            else if (isAimingDown)
+            {
+                if (isShooting) { newState = "shoot-down-torso"; }
+                else { newState = "run-torso"; } // Salto quieto sin apuntar
+            }
+            else if (isShooting)
+            {
+                newState = "shoot-torso"; // Disparo horizontal
+            }
             else
             {
-                newState = "jump-torso"; // Vuelve a saltar si no dispara
+                newState = "jump-torso"; // <-- NUEVA ANIMACIÓN (Salto quieto)
             }
         }
-        else if (isShooting) // Prioridad 3: Disparar horizontal (aire)
+        else
         {
-            newState = "shoot-torso";
-        }
-        else // Prioridad 4: Salto normal (sin disparar)
-        {
-            newState = "jump-torso";
+            if (isAimingUp) 
+            {
+                if (isShooting) { newState = "shoot-up-torso"; }
+                else { newState = "up-torso"; }
+            }
+            else if (isAimingDown)
+            {
+                if (isShooting) { newState = "shoot-down-torso"; }
+                else { newState = "jump-torso"; }
+            }
+            else if (isShooting) 
+            {
+                newState = "shoot-torso";
+            }
+            else 
+            {
+                newState = "run-torso"; // <-- Animación de salto corriendo
+            }
         }
     }
-    // --- ¡AQUÍ ESTÁ EL ARREGLO! ---
     else if (isDucking) // En el suelo y agachado
     {
         // Request #3: Si disparas, salta la transición
@@ -559,7 +599,14 @@ public class GameScene : Scene
 
     if (_isJumping) // <-- Prioridad 1: Saltando
     {
-        newState = "jump-legs";
+        if (_isStandingJump)
+        {
+            newState = "jump-legs"; // <-- NUEVA ANIMACIÓN (Salto quieto)
+        }
+        else
+        {
+            newState = "jump-legs_run"; // <-- La animación de salto corriendo
+        }
     }
     else if (isDucking) // <-- Prioridad 2: Agachado (CON LA LÓGICA DE TRANSICIÓN)
     {

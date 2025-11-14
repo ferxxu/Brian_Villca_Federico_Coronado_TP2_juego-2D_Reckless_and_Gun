@@ -67,6 +67,12 @@
     <Region name="legs_duck_walk_2" x="241" y="559" width="121" height="21" />
     <Region name="legs_duck_walk_3" x="361" y="559" width="121" height="21" />
     <Region name="legs_duck_walk_4" x="481" y="559" width="121" height="21" />
+    <Region name="legs_jump_run_0" x="0" y="262" width="121" height="35" />
+    <Region name="legs_jump_run_1" x="121" y="262" width="121" height="35" />
+    <Region name="legs_jump_run_2" x="241" y="262" width="121" height="35" />
+    <Region name="legs_jump_run_3" x="361" y="262" width="121" height="35" />
+    <Region name="legs_jump_run_4" x="481" y="262" width="121" height="35" />
+    <Region name="legs_jump_run_5" x="601" y="262" width="121" height="35" />
      </Regions>
 
   <Animations>
@@ -169,6 +175,14 @@
       <Frame region="legs_jump_2" />
       <Frame region="legs_jump_3" />
       <Frame region="legs_jump_4" />
+    </Animation>
+    <Animation name="jump-legs_run" delay="100">
+      <Frame region="legs_jump_run_0" />
+      <Frame region="legs_jump_run_1" />
+      <Frame region="legs_jump_run_2" />
+      <Frame region="legs_jump_run_3" />
+      <Frame region="legs_jump_run_4" />
+      <Frame region="legs_jump_run_5" />
     </Animation>
 
     <Animation name="duck-shoot-legs" delay="80">
