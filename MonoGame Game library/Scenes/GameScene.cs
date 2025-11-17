@@ -17,6 +17,8 @@ namespace reckless_and_gun.Scenes;
 
 public class GameScene : Scene
 {
+    private List<Projectile> _projectiles;
+    private TextureAtlas _projectilesAtlas;
     private Camera2D _camera;
     private List<Rectangle> _collisionRects;
     private Texture2D _background;
@@ -30,7 +32,8 @@ public class GameScene : Scene
     {
         _david = new David();
         _spiderBoss = new Spider(300, 50, new Vector2(2000, 290));
-
+        _projectiles = new List<Projectile>();
+        _projectiles = new List<Projectile>();
         base.Initialize();
 
         Core.ExitOnEscape = false;
@@ -43,7 +46,7 @@ public class GameScene : Scene
         _background = Content.Load<Texture2D>("beach_map");
         _texturaDebug = new Texture2D(Core.GraphicsDevice, 1, 1);
         _texturaDebug.SetData(new[] { Color.White });
-
+        _projectilesAtlas = TextureAtlas.FromFile(Core.Content, "projectiles.xml");
         TextureAtlas atlasDavid = TextureAtlas.FromFile(Core.Content, "david1.xml");
         _david.LoadContent(atlasDavid, new Vector2(600, 10));
         _david.DebugTexture = _texturaDebug;
@@ -63,7 +66,6 @@ public class GameScene : Scene
         }
 
     }
-
     public override void Update(GameTime gameTime)
     {
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Escape))
@@ -73,6 +75,37 @@ public class GameScene : Scene
 
         _david.Update(gameTime, Core.Input.Keyboard, _collisionRects);
         _spiderBoss.Update(gameTime, _david.Position);
+        Projectile newBullet = _david.TryShoot(_projectilesAtlas);
+        if (newBullet != null)
+        {
+            _projectiles.Add(newBullet);
+        }
+
+        for (int i = _projectiles.Count - 1; i >= 0; i--)
+        {
+            Projectile bullet = _projectiles[i];
+            bullet.Update(gameTime, _collisionRects);
+
+            if (bullet.IsActive)
+            {
+                if (bullet.IsFromPlayer && _spiderBoss.IsActive)
+                {
+                    if (bullet.Hitbox.Intersects(_spiderBoss.Hitbox))
+                    {
+                        _spiderBoss.TakeDamage(bullet.Damage);
+
+                        bullet.OnHitTarget();
+                    }
+                }
+
+            }
+
+            if (!bullet.IsActive)
+            {
+                _projectiles.RemoveAt(i); //borramos las balas "inactivas"
+            }
+        }
+
         _camera.Follow(_david.Position, _roomBounds, Core.GraphicsDevice.Viewport);
 
         base.Update(gameTime);
@@ -90,6 +123,10 @@ public class GameScene : Scene
 
         Core.SpriteBatch.Draw(_background, Vector2.Zero, Color.White);
         _spiderBoss.Draw(Core.SpriteBatch, _spiderBoss.Position);
+        foreach (var bullet in _projectiles)
+        {
+            bullet.Draw(Core.SpriteBatch);
+        }
         _spiderBoss.DrawDebug(Core.SpriteBatch, _texturaDebug);
 
         _david.Draw(Core.SpriteBatch);

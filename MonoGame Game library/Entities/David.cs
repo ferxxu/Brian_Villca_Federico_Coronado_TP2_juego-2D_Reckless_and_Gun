@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -5,42 +6,29 @@ using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Input;
 
-// Puedes poner esta clase en un nuevo namespace, ej. reckless_and_gun.EntitieCgh
 namespace reckless_and_gun.Entities;
 
 public class David
 {
-    // --- Sprites (Composición) ---
-    // David "tiene" dos sprites, no "es" un sprite.
     private AnimatedSprite _davidLegs;
     private AnimatedSprite _davidChest;
 
-    // --- Atributos de David ---
-    // (Reemplazan a _position_pj y _velocity_pj)
     private Vector2 _position;
     private Vector2 _velocity;
-    public float Health; // (Ejemplo, aún no lo usas)
-
-    // --- Propiedades Públicas (para la Cámara y Colisiones) ---
-    public Vector2 Position => _position; // La CINTURA del personaje
+    public float Health;
+    public Vector2 Position => _position;
     public Rectangle Hitbox { get; private set; }
-
-    // --- Constantes de Física (Internas) ---
     private const float _speed = 150f;
     private const float _jumpSpeed = -500f; // Negativo (hacia arriba)
     private const float _gravity = 1500f;
-
-    // --- Variables de Física Constante (Calculadas) ---
     private float _constLegsHeight;
     private float _constTorsoHeight;
     private float _constHitboxWidth;
     private float _constHitboxHeight;
 
-    // --- Offsets de Animación ---
     private Dictionary<string, Vector2> _torsoFrameOffsets;
     private Dictionary<string, Vector2> _legsFrameOffsets;
 
-    // --- Variables de Estado (FSM) ---
     private string _legState = "idle-legs";
     private string _chestState = "idle-torso";
     private bool _isJumping;
@@ -51,11 +39,10 @@ public class David
     private bool isAimingDown;
     private bool _isDuckingTransitionDone = false;
     private bool _isStandingJump = false;
+    private TimeSpan _fireRate = TimeSpan.FromMilliseconds(200);
+    private TimeSpan _fireCooldownTimer = TimeSpan.Zero;
+    public Texture2D DebugTexture { get; set; }
 
-    // --- Debug ---
-    public Texture2D DebugTexture { get; set; } // La GameScene nos pasa esto
-
-    // --- Constructor e Inicialización ---
     public David()
     {
         _velocity = Vector2.Zero;
@@ -167,29 +154,74 @@ public class David
     {
         HandleInput(keyboard);
         ApplyPhysics(gameTime, collisionRects);
+
+        if (_fireCooldownTimer > TimeSpan.Zero)
+        {
+            _fireCooldownTimer -= gameTime.ElapsedGameTime;
+        }
         handleLegsAnimation();
         handleChestAnimation();
 
         _davidLegs.Update(gameTime);
         _davidChest.Update(gameTime);
-
-        // Lógica de transición de agachado
-        if (!_isDuckingTransitionDone &&
-            (_davidLegs.CurrentAnimationName == "duck-legs-animated" ||
-             _davidChest.CurrentAnimationName == "duck-torso-animated"))
+    }
+    public Projectile TryShoot(TextureAtlas projectilesAtlas)
+    {
+        if (isShooting && _fireCooldownTimer <= TimeSpan.Zero)
         {
-            if (_davidLegs.IsAnimationFinished || _davidChest.IsAnimationFinished)
+            // Reiniciar Cooldown
+            _fireCooldownTimer = _fireRate;
+
+            var facingEffect = _davidLegs.Effects;
+            Vector2 direction;
+            if (isAimingUp && isMovingHorizontally)
+                direction = new Vector2(facingEffect == SpriteEffects.FlipHorizontally ? -1f : 1f, -1f);
+            else if (isAimingUp)
+                direction = -Vector2.UnitY;
+            else if (isAimingDown && isMovingHorizontally)
+                direction = new Vector2(facingEffect == SpriteEffects.FlipHorizontally ? -1f : 1f, 1f);
+            else if (isAimingDown && _isJumping)
+                direction = Vector2.UnitY;
+            else
+                direction = (facingEffect == SpriteEffects.FlipHorizontally) ? -Vector2.UnitX : Vector2.UnitX;
+
+            direction.Normalize();
+
+            Vector2 spawnOffset = Vector2.Zero;
+            float horizontalDir = (facingEffect == SpriteEffects.FlipHorizontally) ? -1f : 1f;
+            float scale = _davidLegs.Scale.X; // (Asumimos que X e Y son 2.0f)
+            if (isDucking)
             {
-                _isDuckingTransitionDone = true;
+                spawnOffset = new Vector2(22f * horizontalDir, 8f);
             }
+            else if (isAimingUp)
+            {
+                spawnOffset = new Vector2(6f * horizontalDir, -25f);
+            }
+            else if (isAimingDown && _isJumping)
+            {
+                spawnOffset = new Vector2(7f * horizontalDir, 15f);
+            }
+            else
+            {
+                spawnOffset = new Vector2(5f * horizontalDir, -20f);
+            }
+
+            Vector2 spawnPosition = this.Position + (spawnOffset * scale);
+
+            Sprite bulletSprite = projectilesAtlas.CreateSprite("Pistol_Bullet");
+            bulletSprite.Origin = new Vector2(bulletSprite.Region.Width / 2f, bulletSprite.Region.Height / 2f);
+            bulletSprite.Scale = new Vector2(2f, 2f);
+
+            return new PistolBullet(bulletSprite, spawnPosition, direction);
         }
+
+        return null;
     }
 
     // --- Manejo de Input ---
     private void HandleInput(KeyboardInfo keyboard)
     {
-        // La lógica de 'Escape' para salir la dejamos en GameScene
-
         // Reset states
         isMovingHorizontally = false;
         isDucking = false;
@@ -247,17 +279,15 @@ public class David
             }
             else
             {
-                _isStandingJump = false; // Es un salto corriendo
+                _isStandingJump = false;
             }
         }
     }
 
-    // --- Física y Colisiones ---
     private void ApplyPhysics(GameTime gameTime, List<Rectangle> collisionRects)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        // 1. ACTUALIZAR VELOCIDAD X
         if (isMovingHorizontally)
         {
             _velocity.X = (_davidLegs.Effects == SpriteEffects.FlipHorizontally) ? -_speed : _speed;
@@ -267,7 +297,6 @@ public class David
             _velocity.X = 0; // Detenerse
         }
 
-        // 2. APLICAR GRAVEDAD (Y)
         if (!_isJumping)
         {
             _velocity.Y = 0f;

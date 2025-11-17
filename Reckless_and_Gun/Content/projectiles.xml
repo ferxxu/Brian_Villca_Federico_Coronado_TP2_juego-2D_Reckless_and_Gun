@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+<Texture>Projectiles</Texture>
+    <Regions>
+     <Region name="Bazooka_Rocket" x="0" y="0" width="32" height="32"/>
+     <Region name="Pistol_Bullet" x="0" y="32" width="32" height="32"/>
+    </Regions>
+
+    <Animations>
+    <Animation name="Bullet_Frame" delay="80">
+    <Frame region="Pistol_Bullet"/>
+    </Animation>
+    <Animation name="Bazooka_Rocket_Frame" delay="80">
+    <Frame region="Bazooka_Rocket" />
+    </Animation>
+
+    </Animations>
+
+</TextureAtlas>
