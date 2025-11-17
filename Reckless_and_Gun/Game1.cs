@@ -4,7 +4,9 @@ using MonoGameLibrary;
 namespace reckless_and_gun;
 
 public class Game1 : Core
+
 {
+
     public Game1() : base("Reckless and Gun", 1280, 600, false)
     {
 

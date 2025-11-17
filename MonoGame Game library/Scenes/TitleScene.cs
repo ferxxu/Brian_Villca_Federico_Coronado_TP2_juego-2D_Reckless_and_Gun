@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
 using MonoGameLibrary.Scenes;
-
+using MonoGameGum;
 
 namespace reckless_and_gun.Scenes;
 
@@ -90,7 +90,7 @@ public class TitleScene : Scene
         Core.GraphicsDevice.Viewport.Width,
         Core.GraphicsDevice.Viewport.Height
     );
-        Core.SpriteBatch.Draw(_background,destinationRectangle, Color.White );
+        Core.SpriteBatch.Draw(_background, destinationRectangle, Color.White);
         Core.SpriteBatch.DrawString(_font, RECKLESS_TEXT, _recklessTextPos + new Vector2(10, 10), dropShadowColor, 0.0f, _recklessTextOrigin, 1.0f, SpriteEffects.None, 1.0f);
         Core.SpriteBatch.DrawString(_font, RECKLESS_TEXT, _recklessTextPos, Color.Orange, 0.0f, _recklessTextOrigin, 1.0f, SpriteEffects.None, 1.0f);
 
