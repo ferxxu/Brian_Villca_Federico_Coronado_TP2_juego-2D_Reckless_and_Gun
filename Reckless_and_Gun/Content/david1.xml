@@ -140,7 +140,7 @@
      <Frame region="torso_duck_walk_4" />
     </Animation>
 
-    <Animation name="duck-torso-animated" delay="400">
+    <Animation name="duck-torso-animated" delay="20">
       <Frame region="torso_duck_Animated_0" />
       <Frame region="torso_duck_Animated_1" />
     </Animation>
@@ -149,7 +149,7 @@
       <Frame region="torso_duck_0" />
     </Animation>
 
-    <Animation name="idle-legs" delay="80">
+    <Animation name="idle-legs" delay="40">
      <Frame region="legs_idle_0" />  
     </Animation>
 
@@ -199,12 +199,12 @@
       <Frame region="legs_duck_walk_4" />
     </Animation>
 
-    <Animation name="duck-legs-animated" delay="100">
+    <Animation name="duck-legs-animated" delay="20">
       <Frame region="legs_duck_0" />
       <Frame region="legs_duck_0" />
 
     </Animation>
-    <Animation name="duck-legs" delay="100">
+    <Animation name="duck-legs" delay="20">
       <Frame region="legs_duck_1" />
     </Animation>
     </Animations>

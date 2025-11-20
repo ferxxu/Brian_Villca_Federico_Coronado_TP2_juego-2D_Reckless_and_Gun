@@ -31,7 +31,7 @@ public class GameScene : Scene
     public override void Initialize()
     {
         _david = new David();
-        _spiderBoss = new Spider(300, 50, new Vector2(2000, 290));
+        _spiderBoss = new Spider(2000, 50, new Vector2(2000, 290));
         _projectiles = new List<Projectile>();
         _projectiles = new List<Projectile>();
         base.Initialize();
