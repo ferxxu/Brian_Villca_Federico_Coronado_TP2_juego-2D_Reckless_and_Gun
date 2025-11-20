@@ -102,7 +102,7 @@ public class GameScene : Scene
 
             if (!bullet.IsActive)
             {
-                _projectiles.RemoveAt(i); //borramos las balas "inactivas"
+                _projectiles.RemoveAt(i); 
             }
         }
 

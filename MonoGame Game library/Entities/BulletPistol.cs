@@ -12,8 +12,8 @@ namespace reckless_and_gun.Entities
             : base(
                   sprite,
                   startPosition,
-                  direction * SPEED,  
-                  BULLET_DAMAGE,      
+                  direction * SPEED,
+                  BULLET_DAMAGE,
                   true
               )
         {
