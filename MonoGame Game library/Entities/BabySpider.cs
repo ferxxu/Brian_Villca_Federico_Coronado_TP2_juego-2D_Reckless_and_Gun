@@ -1,323 +1,132 @@
 using System;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
+using MonoGameLibrary.Entities;
 
-namespace MonoGameLibrary.Entities;
+namespace reckless_and_gun.Entities;
 
 public class BabySpider : AnimatedSprite
 {
-    public enum SpiderState
-    {
-        Patrolling,
-        Attacking_Ranged,
-        Attacking_Melee,
-        Dying
-    }
+    // Estadísticas
+    public float Health { get; private set; }
+    public float MaxHealth { get; private set; }
+    public bool IsActive { get; private set; } = true;
 
-    private float _spiderHealth;
-    private float _spiderVelocity;
-    private SpiderState _currentState;
-
-    public bool IsActive { get; private set; }
-    public bool IsMarkedForRemoval { get; private set; }
-
+    // Movimiento
+    private float _speed;
     private Vector2 _direction;
-    private TimeSpan _patrolTimer;
-    private TimeSpan _timeToChangeDirection;
+    private float _changeDirectionTimer; 
     private static Random _random = new Random();
 
-    private TimeSpan _attackTimer;
-    private TimeSpan _timeToNextAttack;
-    private bool _isTakingDamage;
-    private TimeSpan _damageFlashTimer;
-    private static readonly TimeSpan _damageFlashDuration = TimeSpan.FromMilliseconds(100);
-    private const float _meleeAttackRange = 15f; 
-    private const float _rangedAttackRange = 120f; 
-    // --------------------------------
+    // Visuals
+    private bool _isFlashingRed;
+    private float _flashTimer;
 
-    // --- Eventos ---
-    public event Action<Rectangle> OnMeleeAttack;
-    public event Action<Vector2> OnPoisonSpit;
-
+    // Hitbox
     public Rectangle Hitbox
     {
         get
         {
             if (Region == null) return Rectangle.Empty;
-
-            float w = this.Region.Width * this.Scale.X;
-            float h = this.Region.Height * this.Scale.Y;
-            float x = this.Position.X - (this.Origin.X * this.Scale.X);
-            float y = this.Position.Y - (this.Origin.Y * this.Scale.Y);
-
-            return new Rectangle((int)x, (int)y, (int)w, (int)h);
+            return new Rectangle(
+                (int)Position.X - (int)(Region.Width * Scale.X) / 2,
+                (int)Position.Y - (int)(Region.Height * Scale.Y), 
+                (int)(Region.Width * Scale.X),
+                (int)(Region.Height * Scale.Y)
+            );
         }
     }
 
-    public BabySpider(float health, float velocity, Vector2 startPosition)
+    public BabySpider(float health, float speed, Vector2 startPosition)
     {
-        _spiderHealth = health;       
-        _spiderVelocity = velocity;   
-        this.Position = startPosition;
+        Health = health;
+        MaxHealth = health;
+        _speed = speed;
+        Position = startPosition;
 
-        IsActive = true;
-        IsMarkedForRemoval = false;
-
-        _isTakingDamage = false;
-        _damageFlashTimer = TimeSpan.Zero;
-
-        if (this.Color == default(Color))
-        {
-            this.Color = Color.White;
-        }
-
-        _currentState = SpiderState.Patrolling;
-
-        SetNewPatrolTimer();
-        SetNewAttackTimer();
+        // Iniciar con dirección aleatoria
+        PickRandomDirection();
     }
 
-    private void SetNewPatrolTimer()
+    private void PickRandomDirection()
     {
-        _direction = (_random.Next(0, 2) == 0) ? -Vector2.UnitX : Vector2.UnitX;
-        _timeToChangeDirection = TimeSpan.FromSeconds(_random.Next(1, 4)); 
-        _patrolTimer = TimeSpan.Zero;
-    }
+        // Elige -1 (izquierda) o 1 (derecha)
+        int dirX = _random.Next(0, 2) == 0 ? -1 : 1;
+        _direction = new Vector2(dirX, 0);
 
-    private void SetNewAttackTimer()
-    {
-        _timeToNextAttack = TimeSpan.FromSeconds(_random.Next(2, 5));
-        _attackTimer = TimeSpan.Zero;
-    }
-
-    private void HandleDamageFlash(GameTime gameTime)
-    {
-        if (_isTakingDamage)
-        {
-            _damageFlashTimer += gameTime.ElapsedGameTime;
-
-            if (_damageFlashTimer >= _damageFlashDuration)
-            {
-                _isTakingDamage = false;
-                _damageFlashTimer = TimeSpan.Zero;
-                this.Color = Color.White;
-            }
-        }
+        // Tiempo aleatorio entre 1 y 3 segundos antes de volver a cambiar
+        _changeDirectionTimer = (float)_random.NextDouble() * 2.0f + 1.0f;
     }
 
     public void LoadContent(TextureAtlas atlas, Vector2 scale)
     {
-        AnimatedSprite tempSprite = atlas.CreateAnimatedSprite("spider_walking"); 
+        // Usamos la animación de la madre
+        AnimatedSprite temp = atlas.CreateAnimatedSprite("spider_walking");
+        if (temp.Animations != null)
+            foreach (var anim in temp.Animations) this.AddAnimation(anim.Key, anim.Value);
 
-        if (tempSprite.Animations != null)
-        {
-            foreach (var anim in tempSprite.Animations)
-            {
-                this.AddAnimation(anim.Key, anim.Value);
-            }
-        }
-        
-        this.Scale = scale; 
+        this.Scale = scale;
 
-        _currentState = SpiderState.Patrolling;
-        Play("spider_walking");
-
+        // ORIGEN: Centro horizontal, Abajo vertical (Para que pisen bien el suelo)
         if (this.Region != null)
-        {
-            this.Origin = new Vector2(this.Region.Width / 2f, this.Region.Height / 2f);
-        }
+            this.Origin = new Vector2(this.Region.Width / 2f, this.Region.Height);
+
+        Play("spider_walking");
     }
 
-    public void Update(GameTime gameTime, Vector2 playerPosition)
+    public new void Update(GameTime gameTime)
     {
-        if (!IsActive)
+        if (!IsActive) return;
+
+        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        _changeDirectionTimer -= deltaTime;
+
+        if (_changeDirectionTimer <= 0)
         {
-            if (this.IsAnimationFinished)
-            {
-                IsMarkedForRemoval = true;
-            }
-            base.Update(gameTime);
-            return;
+            PickRandomDirection();
         }
 
-        HandleDamageFlash(gameTime);
+        Position += _direction * _speed * deltaTime;
 
-        _attackTimer += gameTime.ElapsedGameTime;
+        if (_direction.X < 0) Effects = SpriteEffects.FlipHorizontally;
+        else Effects = SpriteEffects.None;
 
-        if (!_isTakingDamage)
+        if (_isFlashingRed)
         {
-            UpdateAI(gameTime, playerPosition);
-
-            switch (_currentState)
+            _flashTimer -= deltaTime;
+            if (_flashTimer <= 0)
             {
-                case SpiderState.Patrolling:
-                    HandlePatrolling(gameTime);
-                    break;
-                case SpiderState.Attacking_Ranged:
-                    HandleRangedAttack(gameTime);
-                    break;
-                case SpiderState.Attacking_Melee:
-                    HandleMeleeAttack(gameTime);
-                    break;
+                _isFlashingRed = false;
+                this.Color = Color.White;
             }
         }
 
         base.Update(gameTime);
     }
 
-    private void UpdateAI(GameTime gameTime, Vector2 playerPosition)
-    {
-        if (_currentState == SpiderState.Attacking_Ranged ||
-            _currentState == SpiderState.Attacking_Melee ||
-            _currentState == SpiderState.Dying)
-        {
-            return;
-        }
-
-        float distanceToPlayer = Vector2.Distance(this.Position, playerPosition);
-
-        if (distanceToPlayer <= _rangedAttackRange)
-        {
-            if (playerPosition.X < this.Position.X)
-            {
-                this.Effects = SpriteEffects.FlipHorizontally; 
-            }
-            else
-            {
-                this.Effects = SpriteEffects.None; 
-            }
-        }
-
-        if (distanceToPlayer <= _meleeAttackRange)
-        {
-            _currentState = SpiderState.Attacking_Melee;
-            Play("spider_upwards"); 
-        }
-        else if (distanceToPlayer <= _rangedAttackRange)
-        {
-            if (_attackTimer >= _timeToNextAttack)
-            {
-                _currentState = SpiderState.Attacking_Ranged;
-                Play("spider_vomit");
-            }
-            else
-            {
-                _currentState = SpiderState.Patrolling;
-                Play("spider_walking");
-            }
-        }
-        else
-        {
-            _currentState = SpiderState.Patrolling;
-            Play("spider_walking");
-        }
-    }
-
-    private void HandleMeleeAttack(GameTime gameTime)
-    {
-        if (this.IsAnimationFinished)
-        {
-            Rectangle meleeHitbox = new Rectangle(
-                (int)this.Position.X,
-                (int)this.Position.Y - 10, 
-                (int)(this.Region.Width * this.Scale.X), 
-                (int)(this.Region.Height * this.Scale.Y) + 10
-            );
-
-            OnMeleeAttack?.Invoke(meleeHitbox);
-
-            _currentState = SpiderState.Patrolling;
-            Play("spider_walking"); 
-        }
-    }
-
-    private void HandlePatrolling(GameTime gameTime)
-    {
-        if (_currentState == SpiderState.Patrolling)
-        {
-             if (_direction.X < 0)
-            {
-                this.Effects = SpriteEffects.FlipHorizontally; 
-            }
-            else
-            {
-                this.Effects = SpriteEffects.None; 
-            }
-        }
-
-        _patrolTimer += gameTime.ElapsedGameTime;
-        if (_patrolTimer >= _timeToChangeDirection)
-        {
-            SetNewPatrolTimer();
-        }
-
-        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        this.Position += _direction * _spiderVelocity * deltaTime;
-    }
-
-    private void HandleRangedAttack(GameTime gameTime)
-    {
-        if (this.IsAnimationFinished)
-        {
-            OnPoisonSpit?.Invoke(this.Position);
-
-            _currentState = SpiderState.Patrolling;
-            Play("spider_walking"); 
-            SetNewAttackTimer(); 
-        }
-    }
-
     public void TakeDamage(int amount)
     {
-        if (!_isTakingDamage && IsActive)
-        {
-            _spiderHealth -= amount;
+        if (!IsActive) return;
 
-            if (_spiderHealth <= 0)
-            {
-                IsActive = false;
-                _spiderHealth = 0;
-                _currentState = SpiderState.Dying;
-                this.Color = Color.White;
-                Play("die"); 
-            }
-            else
-            {
-                _isTakingDamage = true;
-                _damageFlashTimer = TimeSpan.Zero;
-                this.Color = Color.Red;
-            }
+        Health -= amount;
+
+        _isFlashingRed = true;
+        _flashTimer = 0.1f; 
+        this.Color = Color.Red;
+
+        if (Health <= 0)
+        {
+            IsActive = false;
         }
     }
 
-    public void DrawDebug(SpriteBatch spriteBatch, Texture2D debugTexture)
+    public void Draw(SpriteBatch spriteBatch)
     {
-        DibujarBordeRectangulo(spriteBatch, debugTexture, this.Hitbox, Color.Yellow, 1);
-
-        // Visualizar rango Melee reducido
-        Rectangle meleeRangeRect = new Rectangle(
-            (int)(this.Position.X - _meleeAttackRange),
-            (int)(this.Position.Y - _meleeAttackRange),
-            (int)(_meleeAttackRange * 2),
-            (int)(_meleeAttackRange * 2)
-        );
-        DibujarBordeRectangulo(spriteBatch, debugTexture, meleeRangeRect, Color.Red, 1);
-
-        Rectangle rangedRangeRect = new Rectangle(
-            (int)(this.Position.X - _rangedAttackRange),
-            (int)(this.Position.Y - _rangedAttackRange),
-            (int)(_rangedAttackRange * 2),
-            (int)(_rangedAttackRange * 2)
-        );
-        DibujarBordeRectangulo(spriteBatch, debugTexture, rangedRangeRect, Color.Orange, 1);
-    }
-
-    private void DibujarBordeRectangulo(SpriteBatch spriteBatch, Texture2D debugTexture, Rectangle rect, Color color, int grosor)
-    {
-        spriteBatch.Draw(debugTexture, new Rectangle(rect.Left, rect.Top, rect.Width, grosor), color);
-        spriteBatch.Draw(debugTexture, new Rectangle(rect.Left, rect.Bottom - grosor, rect.Width, grosor), color);
-        spriteBatch.Draw(debugTexture, new Rectangle(rect.Left, rect.Top, grosor, rect.Height), color);
-        spriteBatch.Draw(debugTexture, new Rectangle(rect.Right - grosor, rect.Top, grosor, rect.Height), color);
+        if (IsActive)
+        {
+            base.Draw(spriteBatch, Position);
+        }
     }
 }

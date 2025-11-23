@@ -25,6 +25,10 @@
     </Regions>
 
     <Animations>
+    <Animation name="spider_idle" delay="100">
+      <Frame region="spider_walking_0"/>
+    </Animation>
+
     <Animation name="spider_upwards" delay="100">
      <Frame region="spider_upwards_0"/>
      <Frame region="spider_upwards_1"/>
@@ -32,7 +36,7 @@
      <Frame region="spider_upwards_3"/>
     </Animation>
 
-     <Animation name="spider_vomit" delay="100">
+     <Animation name="spider_shooting" delay="100">
       <Frame region="spider_vomit_0"/>
       <Frame region="spider_vomit_1"/>
       <Frame region="spider_vomit_2"/>

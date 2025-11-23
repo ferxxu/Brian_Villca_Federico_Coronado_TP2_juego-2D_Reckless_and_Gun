@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGameLibrary.Entities; 
+using MonoGameLibrary.Entities;
 using reckless_and_gun.Entities;
 
 namespace reckless_and_gun.Managers
@@ -23,24 +23,25 @@ namespace reckless_and_gun.Managers
             _projectiles.Add(bullet);
         }
 
-        // --- MÉTODO 1: UPDATE PARA LA ARAÑA (BEACH) ---
-        public void Update(GameTime gameTime, List<Rectangle> mapCollisions, Spider boss)
+        public void Update(GameTime gameTime, List<Rectangle> mapCollisions, Enemy activeEnemy, David player)
         {
             for (int i = _projectiles.Count - 1; i >= 0; i--)
             {
                 Projectile p = _projectiles[i];
-                p.Update(gameTime, mapCollisions); // Mover y chocar paredes
+                p.Update(gameTime, mapCollisions);
 
                 if (p.IsActive)
                 {
-                    // PROTECCIÓN CONTRA NULL (Por si acaso pasas null)
-                    if (boss != null && p.IsFromPlayer && boss.IsActive)
+                    if (p.IsFromPlayer)
                     {
-                        if (p.Hitbox.Intersects(boss.Hitbox))
+                        if (activeEnemy != null && activeEnemy.IsActive && p.Hitbox.Intersects(activeEnemy.Hitbox))
                         {
-                            boss.TakeDamage(p.Damage);
+                            activeEnemy.TakeDamage(p.Damage);
                             p.OnHitTarget();
                         }
+                    }
+                    else
+                    {
                     }
                 }
                 else
@@ -50,8 +51,26 @@ namespace reckless_and_gun.Managers
             }
         }
 
-        // --- MÉTODO 2: UPDATE PARA EL GORILA (JUNGLE) ---
-        // Copiamos y pegamos, pero cambiamos 'Spider' por 'Gorilla'
+        public void CheckEnemyListCollisions(List<BabySpider> enemies)
+        {
+            for (int i = _projectiles.Count - 1; i >= 0; i--)
+            {
+                Projectile p = _projectiles[i];
+
+                if (p.IsActive && p.IsFromPlayer)
+                {
+                    foreach (var enemy in enemies)
+                    {
+                        if (enemy.IsActive && p.Hitbox.Intersects(enemy.Hitbox))
+                        {
+                            enemy.TakeDamage(p.Damage);
+                            p.OnHitTarget(); 
+                            break; 
+                        }
+                    }
+                }
+            }
+        }
         public void Update(GameTime gameTime, List<Rectangle> mapCollisions, Gorilla boss)
         {
             for (int i = _projectiles.Count - 1; i >= 0; i--)
@@ -67,7 +86,7 @@ namespace reckless_and_gun.Managers
                         {
                             boss.TakeDamage(p.Damage);
                             p.OnHitTarget();
-                            System.Diagnostics.Debug.WriteLine("¡IMPACTO EN GORILA!");
+                            System.Diagnostics.Debug.WriteLine("le pegaste al gorila :(");
                         }
                     }
                 }

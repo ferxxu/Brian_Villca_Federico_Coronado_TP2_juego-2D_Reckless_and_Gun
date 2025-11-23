@@ -9,7 +9,6 @@ using MonoGameLibrary.Camera;
 using TiledSharp;
 using reckless_and_gun.Entities;
 using reckless_and_gun.Managers;
-using MonoGameLibrary.Entities;
 
 namespace reckless_and_gun.Scenes;
 
@@ -17,6 +16,7 @@ public class BeachScene : Scene
 {
     private David _david;
     private Spider _spiderBoss;
+    private List<BabySpider> _babySpiders;
     private ProjectileManager _bulletManager;
 
     private List<Rectangle> _collisionRects;
@@ -26,12 +26,26 @@ public class BeachScene : Scene
     private Rectangle _roomBounds;
     private Camera2D _camera;
 
+    private Texture2D _texturaDebug;
+
     public override void Initialize()
     {
         _david = new David();
-        _spiderBoss = new Spider(500, 500, new Vector2(2000, 290));
+        _spiderBoss = new Spider(1000, 500, new Vector2(2000, 290));
 
-        _bulletManager = new ProjectileManager(null);
+        _babySpiders = new List<BabySpider>();
+        for (int i = 0; i < 5; i++)
+        {
+            Vector2 pos = new Vector2(1000 + (i * 200), 400);
+            _babySpiders.Add(new BabySpider(20, 150, pos));
+        }
+
+        _texturaDebug = new Texture2D(Core.GraphicsDevice, 1, 1);
+        _texturaDebug.SetData(new[] { Color.White });
+        _david.DebugTexture = _texturaDebug;
+
+        _bulletManager = new ProjectileManager(_texturaDebug); 
+
 
         base.Initialize();
         Core.ExitOnEscape = false;
@@ -51,6 +65,11 @@ public class BeachScene : Scene
 
             TextureAtlas atlasSpider = TextureAtlas.FromFile(Core.Content, "spider.xml");
             _spiderBoss.LoadContent(atlasSpider, new Vector2(3.0f, 3.0f));
+
+            foreach (var baby in _babySpiders)
+            {
+                baby.LoadContent(atlasSpider, new Vector2(0.5f, 0.5f));
+            }
 
             _collisionRects = new List<Rectangle>();
             string mapFilePath = System.IO.Path.Combine(Content.RootDirectory, "beach_map.tmx");
@@ -74,36 +93,47 @@ public class BeachScene : Scene
     public override void Update(GameTime gameTime)
     {
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Escape)) Core.ChangeScene(new TitleScene());
-        
+
         _david.Update(gameTime, Core.Input.Keyboard, _collisionRects);
         _spiderBoss.Update(gameTime, _david.Position);
 
+        foreach (var baby in _babySpiders)
+        {
+            baby.Update(gameTime);
+        }
 
         Projectile newBullet = _david.TryShoot(_projectilesAtlas);
         if (newBullet != null) _bulletManager.AddBullet(newBullet);
-        _bulletManager.Update(gameTime, _collisionRects, _spiderBoss);
+
+        _bulletManager.CheckEnemyListCollisions(_babySpiders);
+        _bulletManager.Update(gameTime, _collisionRects, _spiderBoss, _david);
 
         _camera.Follow(_david.Position, _roomBounds, Core.GraphicsDevice.Viewport);
-
-        // 2. LÓGICA DE SALIDA POR COORDENADAS (INFALIBLE)
-        // Si David cruza la línea de 2800 pixeles a la derecha...
-        if (_david.Position.X > 2800)
-        {
-            System.Diagnostics.Debug.WriteLine(">>> LLEGÓ A LA SALIDA >>> CAMBIANDO ESCENA");
-            Core.ChangeScene(new JungleScene());
-        }
 
         base.Update(gameTime);
     }
 
     public override void Draw(GameTime gameTime)
     {
-        Core.GraphicsDevice.Clear(Color.CornflowerBlue);
+        Core.GraphicsDevice.Clear(Color.Black);
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetViewMatrix(Core.GraphicsDevice.Viewport));
 
         if (_background != null) Core.SpriteBatch.Draw(_background, Vector2.Zero, Color.White);
 
+        if (_texturaDebug != null)
+        {
+            foreach (var rect in _collisionRects)
+            {
+                Core.SpriteBatch.Draw(_texturaDebug, rect, Color.LimeGreen * 0.5f);
+            }
+        }
+
         if (_spiderBoss.IsActive) _spiderBoss.Draw(Core.SpriteBatch, _spiderBoss.Position);
+
+        foreach (var baby in _babySpiders)
+        {
+            if (baby.IsActive) baby.Draw(Core.SpriteBatch, baby.Position);
+        }
 
         _bulletManager.Draw(Core.SpriteBatch);
         _david.Draw(Core.SpriteBatch);

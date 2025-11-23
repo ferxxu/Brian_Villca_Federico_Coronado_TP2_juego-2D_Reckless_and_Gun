@@ -152,7 +152,7 @@ namespace reckless_and_gun.Scenes
 
             if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Enter))
             {
-                Core.ChangeScene(new GameScene());
+                Core.ChangeScene(new BeachScene());
             }
         }
 

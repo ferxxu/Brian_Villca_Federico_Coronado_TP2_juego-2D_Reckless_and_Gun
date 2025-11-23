@@ -22,22 +22,19 @@ public class JungleScene : Scene
     private List<Rectangle> _collisionRects;
     private TextureAtlas _projectilesAtlas;
     private Texture2D _background;
-    private Texture2D _texturaDebug; // Para ver las colisiones del piso
+    private Texture2D _texturaDebug; 
     private Rectangle _roomBounds;
     private Camera2D _camera;
 
     public override void Initialize()
     {
         _david = new David();
-        // Gorilla: Vida 3000, Velocidad 120
-        _gorillaBoss = new Gorilla(3000, 120, new Vector2(1500, 300));
+        _gorillaBoss = new Gorilla(3000, 120, new Vector2(500, 280));
 
-        // 1. Crear Textura Debug (Blanca)
         _texturaDebug = new Texture2D(Core.GraphicsDevice, 1, 1);
         _texturaDebug.SetData(new[] { Color.White });
         _david.DebugTexture = _texturaDebug;
 
-        // 2. Inicializar Manager
         _bulletManager = new ProjectileManager(_texturaDebug);
 
         base.Initialize();
@@ -50,7 +47,7 @@ public class JungleScene : Scene
     {
         try
         {
-            _background = Content.Load<Texture2D>("jungle_map"); // Asegúrate de que la imagen se llame así
+            _background = Content.Load<Texture2D>("jungle_map"); 
             _projectilesAtlas = TextureAtlas.FromFile(Core.Content, "projectiles.xml");
 
             TextureAtlas atlasDavid = TextureAtlas.FromFile(Core.Content, "david1.xml");
@@ -69,11 +66,9 @@ public class JungleScene : Scene
             {
                 foreach (var obj in map.ObjectGroups["colissions"].Objects)
                 {
-                    // Agregamos los rectángulos del piso a la lista
                     _collisionRects.Add(new Rectangle((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height));
                 }
             }
-            // ------------------------------------------------
         }
         catch (System.Exception ex)
         {
@@ -85,27 +80,20 @@ public class JungleScene : Scene
     {
         if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Escape)) Core.ChangeScene(new TitleScene());
 
-        // 1. Actualizar David (Pasándole las colisiones para que pise el suelo)
         _david.Update(gameTime, Core.Input.Keyboard, _collisionRects);
 
         _gorillaBoss.Update(gameTime, _david.Position);
 
-        // 2. Crear y gestionar balas
         Projectile newBullet = _david.TryShoot(_projectilesAtlas);
         if (newBullet != null)
         {
             _bulletManager.AddBullet(newBullet);
         }
 
-        // Actualizamos el manager para mover las balas y que choquen con PAREDES
-        // (Pasamos 'null' como boss temporalmente porque el Manager espera una Spider, 
-        //  luego haremos una sobrecarga para Gorilla).
         _bulletManager.Update(gameTime, _collisionRects, _gorillaBoss);
 
         _camera.Follow(_david.Position, _roomBounds, Core.GraphicsDevice.Viewport);
 
-        // --- LÓGICA DE MUERTE POR CAÍDA ELIMINADA ---
-        // Ya no hay chequeo de posición Y aquí.
 
         base.Update(gameTime);
     }
@@ -118,12 +106,10 @@ public class JungleScene : Scene
 
         if (_background != null) Core.SpriteBatch.Draw(_background, Vector2.Zero, Color.White);
 
-        // Dibujamos los pisos para verificar (Debug Visual)
         if (_texturaDebug != null)
         {
             foreach (var rect in _collisionRects)
             {
-                // Dibujamos el suelo en verde semitransparente
                 Core.SpriteBatch.Draw(_texturaDebug, rect, Color.LimeGreen * 0.5f);
             }
         }

@@ -6,7 +6,7 @@ namespace reckless_and_gun.Entities
     public class PistolBullet : Projectile
     {
         private const float SPEED = 800f; // Velocidad de la bala
-        private const int BULLET_DAMAGE = 1000; // Daño
+        private const int BULLET_DAMAGE = 50; // Daño
 
         public PistolBullet(Sprite sprite, Vector2 startPosition, Vector2 direction)
             : base(
