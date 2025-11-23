@@ -3,7 +3,8 @@
 <Texture>Projectiles</Texture>
     <Regions>
      <Region name="Bazooka_Rocket" x="0" y="0" width="32" height="32"/>
-     <Region name="Pistol_Bullet" x="0" y="32" width="32" height="32"/>
+     <Region name="Pistol_Bullet" x="32" y="0" width="32" height="32"/>
+     <Region name="Vomit_Ball" x="0" y="32" width="32" height="32"/>
     </Regions>
 
     <Animations>
@@ -13,7 +14,9 @@
     <Animation name="Bazooka_Rocket_Frame" delay="80">
     <Frame region="Bazooka_Rocket" />
     </Animation>
-
+    <Animation name="Vomit_Ball_Frame" delay="80">
+    <Frame region="Vomit_Ball" />
+    </Animation>
     </Animations>
-
+    
 </TextureAtlas>

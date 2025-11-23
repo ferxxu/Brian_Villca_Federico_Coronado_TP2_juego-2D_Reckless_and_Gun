@@ -33,7 +33,6 @@ namespace reckless_and_gun.Scenes
 
         // --- UI ---
         private UiButton _btnRes, _btnBack;
-        // private UiButton _btnVolMinus, _btnVolPlus; // Descomentar si se usan
 
         public override void Initialize()
         {

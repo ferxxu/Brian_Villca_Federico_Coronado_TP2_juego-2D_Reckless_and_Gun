@@ -50,6 +50,36 @@
 /processorParam:TextureFormat=Compressed
 /build:font.spritefont
 
+#begin gorilla.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gorilla.png
+
+#begin gorilla.xml
+/copy:gorilla.xml
+
+#begin jungle_map.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:jungle_map.png
+
+#begin jungle_map.tmx
+/copy:jungle_map.tmx
+
 #begin jungle.png
 /importer:TextureImporter
 /processor:TextureProcessor

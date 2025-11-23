@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Input;
-using reckless_and_gun.Entities; 
+using reckless_and_gun.Entities;
+using reckless_and_gun.Scenes;
 
 namespace reckless_and_gun.Entities;
 
@@ -19,10 +21,10 @@ public class David
     public float Health;
     public Vector2 Position => _position;
     public Rectangle Hitbox { get; private set; }
-    
+
     // Constantes de movimiento
     private const float _speed = 150f;
-    private const float _jumpSpeed = -500f; 
+    private const float _jumpSpeed = -500f;
     private const float _gravity = 1500f;
 
     // Constantes de dimensiones
@@ -49,7 +51,7 @@ public class David
     // Disparo
     private TimeSpan _fireRate = TimeSpan.FromMilliseconds(200);
     private TimeSpan _fireCooldownTimer = TimeSpan.Zero;
-    
+
     // DEBUG
     public Texture2D DebugTexture { get; set; }
 
@@ -57,25 +59,25 @@ public class David
     // 🛠️ ZONA DE CONFIGURACIÓN DE DISPAROS 🛠️
     // =================================================================
     // Ajusta estos valores. El primer número es X (Horizontal), el segundo es Y (Vertical).
-    
+
     // --- CUANDO MIRA A LA DERECHA --->
     private Vector2 _offsetRight_Normal = new Vector2(80f, -20f);  // Parado/Corriendo
-    private Vector2 _offsetRight_Duck   = new Vector2(76f, -15f);    // Agachado
-    private Vector2 _offsetRight_Up     = new Vector2(46f, -25f);  // Apuntando Arriba
-    private Vector2 _offsetRight_Down   = new Vector2(52f, 0f);   // Apuntando Abajo (aire)
+    private Vector2 _offsetRight_Duck = new Vector2(76f, -15f);    // Agachado
+    private Vector2 _offsetRight_Up = new Vector2(46f, -25f);  // Apuntando Arriba
+    private Vector2 _offsetRight_Down = new Vector2(52f, 0f);   // Apuntando Abajo (aire)
 
     // --- CUANDO MIRA A LA IZQUIERDA <---
     // (Usa números negativos en X para ir hacia atrás)
-    private Vector2 _offsetLeft_Normal  = new Vector2(20f, -20f); // Parado/Corriendo
-    private Vector2 _offsetLeft_Duck    = new Vector2(24f, -15f);   // Agachado
-    private Vector2 _offsetLeft_Up      = new Vector2(49f, -25f); // Apuntando Arriba
-    private Vector2 _offsetLeft_Down    = new Vector2(47f, 0f);  // Apuntando Abajo (aire)
+    private Vector2 _offsetLeft_Normal = new Vector2(20f, -20f); // Parado/Corriendo
+    private Vector2 _offsetLeft_Duck = new Vector2(24f, -15f);   // Agachado
+    private Vector2 _offsetLeft_Up = new Vector2(49f, -25f); // Apuntando Arriba
+    private Vector2 _offsetLeft_Down = new Vector2(47f, 0f);  // Apuntando Abajo (aire)
     // =================================================================
 
     public David()
     {
         _velocity = Vector2.Zero;
-        _isJumping = true; 
+        _isJumping = true;
     }
 
     public void LoadContent(TextureAtlas atlas, Vector2 startPosition)
@@ -101,13 +103,15 @@ public class David
         // Offsets de animación (para que el sprite no vibre)
         CargarOffsetsDeAnimacion();
 
-        UpdateHitbox(); 
+        UpdateHitbox();
     }
 
     public void Update(GameTime gameTime, KeyboardInfo keyboard, List<Rectangle> collisionRects)
     {
         HandleInput(keyboard);
         ApplyPhysics(gameTime, collisionRects);
+        System.Diagnostics.Debug.WriteLine($"David Pos: {this.Position.X} | Salida en: 2800");
+
 
         if (_fireCooldownTimer > TimeSpan.Zero)
         {
@@ -120,9 +124,6 @@ public class David
         _davidChest.Update(gameTime);
     }
 
-    // =======================================================
-    // 🎯 MÉTODO DE DISPARO ROBUSTO (MANUAL)
-    // =======================================================
     public Projectile TryShoot(TextureAtlas projectilesAtlas)
     {
         if (isShooting && _fireCooldownTimer <= TimeSpan.Zero)
@@ -139,22 +140,22 @@ public class David
 
             // 1. Definir Dirección de la bala
             Vector2 direction;
-            if (isAimingUp && !isDucking) 
+            if (isAimingUp && !isDucking)
             {
                 direction = -Vector2.UnitY;
             }
-            else if (isAimingDown) 
+            else if (isAimingDown)
             {
                 direction = Vector2.UnitY;
             }
-            else 
+            else
             {
                 // Si está agachado (aunque apriete arriba) o no apunta a nada, sale recta.
                 direction = new Vector2(mirandoDerecha ? 1f : -1f, 0);
             }
-            
+
             direction.Normalize();
-            
+
             direction.Normalize();
 
             // 2. Seleccionar la posición EXACTA (Offset)
@@ -178,16 +179,18 @@ public class David
             }
 
             // 3. Calcular posición final
-            Vector2 spawnPosition = this.Position + 
-                                    (muzzleOffset * scale) + 
+            Vector2 spawnPosition = this.Position +
+                                    (muzzleOffset * scale) +
                                     (torsoAnimOffset * scale);
 
             // 4. Crear Bala
             Sprite bulletSprite = projectilesAtlas.CreateSprite("Pistol_Bullet");
             bulletSprite.Origin = new Vector2(bulletSprite.Region.Width / 2f, bulletSprite.Region.Height / 2f);
             bulletSprite.Scale = new Vector2(2f, 2f);
+            var newBullet = new PistolBullet(bulletSprite, spawnPosition, direction);
+            newBullet.DebugTexture = this.DebugTexture;
 
-            return new PistolBullet(bulletSprite, spawnPosition, direction);
+            return newBullet;
         }
         return null;
     }
@@ -220,13 +223,19 @@ public class David
         return this.Position + (muzzleOffset * scale) + (torsoAnimOffset * scale);
     }
 
-    // --- Resto de la lógica (Input, Physics, Animación) ---
 
-   private void HandleInput(KeyboardInfo keyboard)
+    private void HandleInput(KeyboardInfo keyboard)
     {
         // Reset states
         isMovingHorizontally = false;
         isDucking = false;
+        
+        if (keyboard.WasKeyJustPressed(Keys.P))
+        {
+            Core.ChangeScene(new JungleScene());
+            return;
+        }
+
 
         if (!keyboard.IsKeyDown(Keys.S))
         {
@@ -339,10 +348,10 @@ public class David
 
     private void UpdateHitbox()
     {
-        float currentHitboxHeight = isDucking 
-            ? _constTorsoHeight + (_constLegsHeight * 0.6f) 
+        float currentHitboxHeight = isDucking
+            ? _constTorsoHeight + (_constLegsHeight * 0.6f)
             : _constHitboxHeight;
-        
+
         float yOffset = _constHitboxHeight - currentHitboxHeight;
         float anchorX = _davidLegs.Origin.X * _davidLegs.Scale.X;
         float torsoAnchorY = _davidChest.Origin.Y * _davidChest.Scale.Y;
@@ -359,7 +368,7 @@ public class David
     {
         string legFrameName = _davidLegs.Region?.Name ?? "";
         string torsoFrameName = _davidChest.Region?.Name ?? "";
-        
+
         Vector2 legOffset = _legsFrameOffsets.GetValueOrDefault(legFrameName, Vector2.Zero);
         Vector2 torsoOffset = _torsoFrameOffsets.GetValueOrDefault(torsoFrameName, Vector2.Zero);
 
@@ -387,7 +396,7 @@ public class David
         spriteBatch.Draw(tex, new Rectangle(rect.Right - grosor, rect.Top, grosor, rect.Height), color);
     }
 
-   public void handleChestAnimation()
+    public void handleChestAnimation()
     {
         string newState = "idle-torso";
 
@@ -410,19 +419,19 @@ public class David
         {
             // PRIORIDAD 1: DISPARAR (Quieto)
             // Gracias a , si entra aquí, isMovingHorizontally ya es falso.
-            if (isShooting) 
+            if (isShooting)
             {
                 newState = "duck-shoot-torso";
                 _isDuckingTransitionDone = true;
             }
             // PRIORIDAD 2: CAMINAR (Solo si no dispara)
-            else if (isMovingHorizontally) 
+            else if (isMovingHorizontally)
             {
                 newState = "duck-walk-torso";
-                _isDuckingTransitionDone = true; 
+                _isDuckingTransitionDone = true;
             }
             // PRIORIDAD 3: TRANSICIÓN DE BAJADA
-            else if (!_isDuckingTransitionDone) 
+            else if (!_isDuckingTransitionDone)
             {
                 newState = "duck-torso-animated";
                 if (_chestState == "duck-torso-animated" && _davidChest.IsAnimationFinished)
@@ -431,7 +440,7 @@ public class David
                 }
             }
             // PRIORIDAD 4: IDLE (Quieto agachado)
-            else 
+            else
             {
                 newState = "duck-torso";
             }
@@ -439,7 +448,7 @@ public class David
         else if (isAimingUp) newState = isShooting ? "shoot-up-torso" : "up-torso";
         else if (isShooting) newState = "shoot-torso";
         else if (isMovingHorizontally) newState = "run-torso";
-        
+
         if (newState != _chestState)
         {
             _chestState = newState;
@@ -455,21 +464,21 @@ public class David
         if (_isJumping) newState = _isStandingJump ? "jump-legs" : "jump-legs_run";
         else if (isDucking)
         {
-            if (isShooting) 
+            if (isShooting)
             {
                 newState = "duck-shoot-legs";
                 _isDuckingTransitionDone = true;
             }
-            else if (isMovingHorizontally) 
+            else if (isMovingHorizontally)
             {
                 newState = "duck-walk-legs";
                 _isDuckingTransitionDone = true;
             }
-            else if (!_isDuckingTransitionDone) 
+            else if (!_isDuckingTransitionDone)
             {
                 newState = "duck-legs-animated";
             }
-            else 
+            else
             {
                 newState = "duck-legs";
             }
@@ -485,7 +494,7 @@ public class David
     }
     private void CargarOffsetsDeAnimacion()
     {
-         _torsoFrameOffsets = new Dictionary<string, Vector2>() {
+        _torsoFrameOffsets = new Dictionary<string, Vector2>() {
             { "torso_idle_0", Vector2.Zero }, { "torso_run_0", Vector2.Zero }, { "torso_run_1", Vector2.Zero },
             { "torso_jump_0", Vector2.Zero }, { "torso_jump_1", Vector2.Zero }, { "torso_jump_2", Vector2.Zero },
             { "torso_jump_3", Vector2.Zero }, { "torso_jump_4", Vector2.Zero }, { "torso_shoot_0", Vector2.Zero },

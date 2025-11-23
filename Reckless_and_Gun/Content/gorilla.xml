@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+  <Texture>gorilla</Texture>
+    <Regions>
+     <Region name="gorilla_walking_0" x="0" y="0" width="200" height="200"/>
+     <Region name="gorilla_walking_1" x="200" y="0" width="200" height="200"/>
+     <Region name="gorilla_walking_2" x="400" y="0" width="200" height="200"/>
+     <Region name="gorilla_walking_3" x="0" y="200" width="200" height="200"/>
+     <Region name="gorilla_walking_4" x="200" y="200" width="200" height="200"/>
+     <Region name="gorilla_walking_5" x="400" y="200" width="200" height="200"/>
+    
+     <Region name="gorilla_shooting_0" x="0" y="400" width="200" height="200"/>
+     <Region name="gorilla_shooting_1" x="200" y="400" width="200" height="200"/>
+     <Region name="gorilla_shooting_2" x="400" y="400" width="200" height="200"/>
+     <Region name="gorilla_shooting_3" x="0" y="600" width="200" height="200"/>
+    </Regions>
+  
+  
+  <Animations>
+    <Animation name="gorilla_idle" delay="100">
+     <Frame region="gorilla_walking_0"/>
+    </Animation>
+
+    <Animation name="gorilla_walking" delay="100">
+     <Frame region="gorilla_walking_0"/>
+     <Frame region="gorilla_walking_1"/>
+     <Frame region="gorilla_walking_2"/>
+     <Frame region="gorilla_walking_3"/>
+     <Frame region="gorilla_walking_4"/>
+     <Frame region="gorilla_walking_5"/>
+    </Animation>
+   
+    <Animation name="gorilla_shooting" delay="100">
+     <Frame region="gorilla_shooting_0"/>
+     <Frame region="gorilla_shooting_1"/>
+     <Frame region="gorilla_shooting_2"/>
+     <Frame region="gorilla_shooting_3"/>
+    </Animation>
+
+  </Animations>
+
+</TextureAtlas>

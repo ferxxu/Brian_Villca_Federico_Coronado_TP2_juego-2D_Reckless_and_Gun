@@ -7,7 +7,7 @@ public class Game1 : Core
 
 {
 
-    public Game1() : base("Reckless and Gun", 1280, 600, false)
+    public Game1() : base("Reckless and Gun", 1220, 600, false)
     {
 
     }
