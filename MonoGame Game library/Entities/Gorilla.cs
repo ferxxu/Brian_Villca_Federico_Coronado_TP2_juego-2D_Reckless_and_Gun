@@ -10,18 +10,13 @@ public class Gorilla : Enemy
     {
         this.Position = startPosition;
 
-        // --- GORILA ES UN TANQUE ---
         _meleeRange = 80f;
-        _rangedRange = 400f;
+        _rangedRange = 500f;
 
-        // Proyectil de Cohete
         _projectileTextureName = "Bazooka_Rocket";
-        _projectileSpeed = 400f; // Rápido
-        _projectileDamage = 25;  // Duele
+        _projectileSpeed = 400f; 
+        _projectileDamage = 20;  
 
-        // AJUSTE DE ANIMACIONES:
-        // Tu XML no tiene "gorilla_melee". Usaremos "gorilla_shooting" o "idle"
-        // para que no crashee si se acerca mucho.
         _animMelee = "gorilla_idle"; 
     }
 }

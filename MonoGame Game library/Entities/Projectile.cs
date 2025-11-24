@@ -20,11 +20,20 @@ namespace reckless_and_gun.Entities
         {
             get
             {
+                // --- CAMBIO AQUÍ: Reducción de hitbox ---
+                // 0.5f significa el 50% del tamaño original.
+                // Súbelo a 0.7f si quieres que sea más grande, o bájalo a 0.3f para que sea más pequeño.
+                float hitboxScale = 0.5f;
+
+                int reducedWidth = (int)(Width * hitboxScale);
+                int reducedHeight = (int)(Height * hitboxScale);
+
+                // Calculamos la posición centrada usando el nuevo tamaño reducido
                 return new Rectangle(
-                    (int)Position.X - Width / 2,
-                    (int)Position.Y - Height / 2,
-                    Width,
-                    Height
+                    (int)Position.X - reducedWidth / 2,
+                    (int)Position.Y - reducedHeight / 2,
+                    reducedWidth,
+                    reducedHeight
                 );
             }
         }
@@ -69,25 +78,31 @@ namespace reckless_and_gun.Entities
         public virtual void OnHitWorld() { IsActive = false; }
         public virtual void OnHitTarget() { IsActive = false; }
 
-        public virtual void Draw(SpriteBatch spriteBatch)
-        {
-            if (IsActive)
-            {
-                if (_sprite != null) _sprite.Draw(spriteBatch, Position);
-
-                if (DebugTexture != null)
-                {
-                    DibujarBordeRectangulo(spriteBatch, DebugTexture, Hitbox, Color.Cyan, 2);
-                }
-            }
-        }
-
         protected void DibujarBordeRectangulo(SpriteBatch spriteBatch, Texture2D tex, Rectangle rect, Color color, int grosor)
         {
             spriteBatch.Draw(tex, new Rectangle(rect.Left, rect.Top, rect.Width, grosor), color);
             spriteBatch.Draw(tex, new Rectangle(rect.Left, rect.Bottom - grosor, rect.Width, grosor), color);
             spriteBatch.Draw(tex, new Rectangle(rect.Left, rect.Top, grosor, rect.Height), color);
             spriteBatch.Draw(tex, new Rectangle(rect.Right - grosor, rect.Top, grosor, rect.Height), color);
+        }
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+            if (IsActive)
+            {
+                if (_sprite != null)
+                {
+                    _sprite.Draw(spriteBatch, Position);
+
+                    if (DebugTexture != null)
+                        DibujarBordeRectangulo(spriteBatch, DebugTexture, Hitbox, Color.Cyan, 2);
+                }
+                else if (DebugTexture != null)
+                {
+                    Color colorBala = IsFromPlayer ? Color.Yellow : Color.LimeGreen;
+
+                    spriteBatch.Draw(DebugTexture, Hitbox, colorBala);
+                }
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ public class Spider : Enemy
         this.Position = startPosition;
 
         _meleeRange = 40f;
-        _rangedRange = 250f;
+        _rangedRange = 700f;
         
         _projectileTextureName = "Vomit_Ball"; 
         _projectileSpeed = 250f;
@@ -19,4 +19,6 @@ public class Spider : Enemy
 
         _animMelee = "spider_upwards"; 
     }
+
+    
 }

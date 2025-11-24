@@ -28,25 +28,35 @@ namespace reckless_and_gun.Managers
             for (int i = _projectiles.Count - 1; i >= 0; i--)
             {
                 Projectile p = _projectiles[i];
+
+                // 1. Mover la bala y chequear paredes
                 p.Update(gameTime, mapCollisions);
 
                 if (p.IsActive)
                 {
+                    // Bala del jugador 
                     if (p.IsFromPlayer)
                     {
+                        // Verificamos que el enemigo exista, esté vivo y haya colisión
                         if (activeEnemy != null && activeEnemy.IsActive && p.Hitbox.Intersects(activeEnemy.Hitbox))
                         {
                             activeEnemy.TakeDamage(p.Damage);
-                            p.OnHitTarget();
+                            p.OnHitTarget(); // Destruir bala
                         }
                     }
+                    // Bala del enemigo
                     else
                     {
+                        if (player != null && !player.IsDead && p.Hitbox.Intersects(player.Hitbox))
+                        {
+                            player.TakeDamage(p.Damage);
+                            p.OnHitTarget(); // Destruir bala
+                        }
                     }
                 }
                 else
                 {
-                    _projectiles.RemoveAt(i);
+                    _projectiles.RemoveAt(i); // Eliminar balas muertas o que chocaron pared
                 }
             }
         }
@@ -64,35 +74,10 @@ namespace reckless_and_gun.Managers
                         if (enemy.IsActive && p.Hitbox.Intersects(enemy.Hitbox))
                         {
                             enemy.TakeDamage(p.Damage);
-                            p.OnHitTarget(); 
-                            break; 
-                        }
-                    }
-                }
-            }
-        }
-        public void Update(GameTime gameTime, List<Rectangle> mapCollisions, Gorilla boss)
-        {
-            for (int i = _projectiles.Count - 1; i >= 0; i--)
-            {
-                Projectile p = _projectiles[i];
-                p.Update(gameTime, mapCollisions);
-
-                if (p.IsActive)
-                {
-                    if (boss != null && p.IsFromPlayer && boss.IsActive)
-                    {
-                        if (p.Hitbox.Intersects(boss.Hitbox))
-                        {
-                            boss.TakeDamage(p.Damage);
                             p.OnHitTarget();
-                            System.Diagnostics.Debug.WriteLine("le pegaste al gorila :(");
+                            break;
                         }
                     }
-                }
-                else
-                {
-                    _projectiles.RemoveAt(i);
                 }
             }
         }
