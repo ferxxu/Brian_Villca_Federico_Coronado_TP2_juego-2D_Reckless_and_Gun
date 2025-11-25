@@ -11,7 +11,7 @@ public class Gorilla : Enemy
         this.Position = startPosition;
 
         _meleeRange = 80f;
-        _rangedRange = 500f;
+        _rangedRange = 1000f;
 
         _projectileTextureName = "Bazooka_Rocket";
         _projectileSpeed = 400f; 

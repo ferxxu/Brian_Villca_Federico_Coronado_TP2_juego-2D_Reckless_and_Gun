@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media; // <--- NECESARIO PARA SONG
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
@@ -9,6 +10,7 @@ using MonoGameLibrary.Camera;
 using TiledSharp;
 using reckless_and_gun.Entities;
 using reckless_and_gun.Managers;
+using Microsoft.Xna.Framework.Audio;
 
 namespace reckless_and_gun.Scenes;
 
@@ -25,6 +27,9 @@ public class JungleScene : Scene
     private Rectangle _roomBounds;
     private Camera2D _camera;
     private SpriteFont _uiFont;
+
+    // --- VARIABLE DE AUDIO ---
+    private Song _jungleMusic;
 
     public override void Initialize()
     {
@@ -45,6 +50,18 @@ public class JungleScene : Scene
 
     public override void LoadContent()
     {
+        // --- CARGAR MÚSICA JUNGLA ---
+        // Asegúrate de importar el mp3 "jungle_theme" en el MGCB y ponerlo como "Song"
+        _jungleMusic = Content.Load<Song>("Audio/intento 100"); 
+
+        if (Core.Audio != null && _jungleMusic != null)
+        {
+            Core.Audio.SongVolume = 0.5f; 
+            Core.Audio.PlaySong(_jungleMusic, true);
+        }
+        // ----------------------------
+        SoundEffect sfxShoot = Content.Load<SoundEffect>("Audio/Laser_shoot 5");
+    _david.SetSoundEffects( sfxShoot);
         _uiFont = Content.Load<SpriteFont>("font");
         _background = Content.Load<Texture2D>("jungle_map");
         _projectilesAtlas = TextureAtlas.FromFile(Core.Content, "projectiles.xml");
@@ -60,14 +77,15 @@ public class JungleScene : Scene
         var map = new TmxMap(mapFilePath);
         _roomBounds = new Rectangle(0, 0, map.Width * map.TileWidth, map.Height * map.TileHeight);
 
-        var collisionLayer = map.ObjectGroups["colissions"];
-
-        if (collisionLayer != null)
+        // Nota: Mantuve "colissions" tal cual estaba en tu código original
+        // Si en Tiled se llama "collisions" (con dos s), corrige esta línea.
+        if (map.ObjectGroups.Contains("colissions"))
         {
-            foreach (var obj in collisionLayer.Objects)
-            {
-                _collisionRects.Add(new Rectangle((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height));
-            }
+             var collisionLayer = map.ObjectGroups["colissions"];
+             foreach (var obj in collisionLayer.Objects)
+             {
+                 _collisionRects.Add(new Rectangle((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height));
+             }
         }
     }
 

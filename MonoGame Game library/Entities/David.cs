@@ -5,7 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Input;
-
+using Microsoft.Xna.Framework.Audio; // <--- NECESARIO PARA SOUNDEFFECT
+using MonoGameLibrary;               // <--- NECESARIO PARA CORE
 namespace reckless_and_gun.Entities;
 
 public class David
@@ -29,8 +30,8 @@ public class David
     public Rectangle Hitbox { get; private set; }
 
     // Constantes de movimiento
-    private const float _speed = 150f;
-    private const float _jumpSpeed = -500f;
+    private const float _speed = 300f;
+    private const float _jumpSpeed = -700f;
     private const float _gravity = 1500f;
 
     private float _constLegsHeight;
@@ -69,13 +70,18 @@ public class David
     private Vector2 _offsetLeft_Up = new Vector2(49f, -25f);
     private Vector2 _offsetLeft_Down = new Vector2(47f, 0f);
 
+    private SoundEffect _sfxShoot;
     public David()
     {
         _velocity = Vector2.Zero;
         _isJumping = true;
         Health = MaxHealth;
     }
+    public void SetSoundEffects( SoundEffect shoot)
+    {
 
+        _sfxShoot = shoot;
+    }
     public void LoadContent(TextureAtlas atlas, Vector2 startPosition)
     {
         _davidChest = atlas.CreateAnimatedSprite("idle-torso");
@@ -165,6 +171,11 @@ public class David
         if (isShooting && _fireCooldownTimer <= TimeSpan.Zero)
         {
             _fireCooldownTimer = _fireRate;
+            if (_sfxShoot != null)
+            {
+                float pitch = (float)(new Random().NextDouble() * 0.2 - 0.1); 
+                Core.Audio.PlaySoundEffect(_sfxShoot, 0.2f, pitch, 0.0f, false);
+            }
             var facingEffect = _davidLegs.Effects;
             bool mirandoDerecha = facingEffect != SpriteEffects.FlipHorizontally;
             float scale = _davidLegs.Scale.X;
@@ -201,23 +212,73 @@ public class David
         return null;
     }
 
-    private void HandleInput(KeyboardInfo keyboard)
+   private void HandleInput(KeyboardInfo keyboard)
+{
+    // 1. Reseteamos los estados por defecto para este frame
+    isMovingHorizontally = false;
+    isDucking = false;
+    isShooting = false;
+    isAimingUp = false;
+    isAimingDown = false;
+    
+    // Resetear transición de agachado si soltamos la tecla S
+    if (!keyboard.IsKeyDown(Keys.S)) _isDuckingTransitionDone = false;
+
+    // 2. Leemos teclas (Intenciones)
+    bool keyUp = keyboard.IsKeyDown(Keys.W);
+    bool keyDown = keyboard.IsKeyDown(Keys.S);
+    bool keyLeft = keyboard.IsKeyDown(Keys.A);
+    bool keyRight = keyboard.IsKeyDown(Keys.D);
+    bool keyShoot = keyboard.IsKeyDown(Keys.H);
+    bool keyJump = keyboard.IsKeyDown(Keys.J);
+
+    // 3. Configurar Estados de Combate
+    isShooting = keyShoot;
+    if (keyUp) isAimingUp = true;
+
+    // Lógica Agacharse vs Apuntar Abajo
+    if (keyDown)
     {
-        isMovingHorizontally = false;
-        isDucking = false;
-        if (!keyboard.IsKeyDown(Keys.S)) _isDuckingTransitionDone = false;
-        isShooting = false;
-        isAimingUp = false;
-        isAimingDown = false;
-        if (keyboard.IsKeyDown(Keys.W)) isAimingUp = true;
-        if (keyboard.IsKeyDown(Keys.S)) { if (!_isJumping) isDucking = true; else isAimingDown = true; }
-        if (keyboard.IsKeyDown(Keys.A)) { isMovingHorizontally = true; _davidLegs.Effects = SpriteEffects.FlipHorizontally; _davidChest.Effects = SpriteEffects.FlipHorizontally; }
-        else if (keyboard.IsKeyDown(Keys.D)) { isMovingHorizontally = true; _davidLegs.Effects = SpriteEffects.None; _davidChest.Effects = SpriteEffects.None; }
-        if (keyboard.IsKeyDown(Keys.H)) isShooting = true;
-        if (keyboard.IsKeyDown(Keys.J) && !_isJumping && !isDucking) { _velocity.Y = _jumpSpeed; _isJumping = true; _isStandingJump = !isMovingHorizontally; }
-        if (isDucking && isShooting) isMovingHorizontally = false;
+        if (_isJumping) isAimingDown = true; // En el aire apunta abajo
+        else isDucking = true;               // En el suelo se agacha
     }
 
+    // 4. Lógica de Movimiento (AQUÍ ESTÁ LA SOLUCIÓN)
+    // Detectamos si el jugador QUIERE moverse
+    bool intentToMove = (keyLeft || keyRight);
+
+    if (intentToMove)
+    {
+        // Dirección
+        if (keyLeft)
+        {
+            _davidLegs.Effects = SpriteEffects.FlipHorizontally;
+            _davidChest.Effects = SpriteEffects.FlipHorizontally;
+        }
+        else
+        {
+            _davidLegs.Effects = SpriteEffects.None;
+            _davidChest.Effects = SpriteEffects.None;
+        }
+        
+        if (isDucking && isShooting)
+        {
+            isMovingHorizontally = false; // Bloqueado (Metal Slug style: agachado quieto)
+        }
+        else
+        {
+            isMovingHorizontally = true;  // Permitido (Correr y disparar)
+        }
+    }
+
+    // 5. Salto
+    if (keyJump && !_isJumping && !isDucking)
+    {
+        _velocity.Y = _jumpSpeed;
+        _isJumping = true;
+        _isStandingJump = !isMovingHorizontally;
+    }
+}
     private void ApplyPhysics(GameTime gameTime, List<Rectangle> collisionRects)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -335,97 +396,148 @@ public class David
         spriteBatch.Draw(tex, new Rectangle(rect.Right - grosor, rect.Top, grosor, rect.Height), color);
     }
 
-    public void handleChestAnimation()
+   public void handleChestAnimation()
+{
+    string newState = "idle-torso";
+
+    // --- PRIORIDAD 1: AIRE (Salto) ---
+    if (_isJumping)
     {
-        string newState = "idle-torso";
-
-        if (_isJumping)
+        // En el aire, apuntar tiene prioridad sobre la animación de salto normal
+        if (isAimingUp) 
+            newState = isShooting ? "shoot-up-torso" : "up-torso";
+        else if (isAimingDown) 
+            newState = isShooting ? "shoot-down-torso" : "down-torso";
+        else if (isShooting) 
+            newState = "shoot-torso";
+        else 
+            newState = "jump-torso"; 
+    }
+    // --- PRIORIDAD 2: AGACHADO (Suelo) ---
+    else if (isDucking)
+    {
+        // NOTA: HandleInput ya garantiza que si disparas, isMovingHorizontally es false.
+        
+        if (isShooting)
         {
-            if (_isStandingJump)
-            {
-                if (isAimingUp) newState = isShooting ? "shoot-up-torso" : "up-torso";
-                else if (isAimingDown) newState = isShooting ? "shoot-down-torso" : "down-torso";
-                else newState = isShooting ? "shoot-torso" : "jump-torso";
-            }
-            else
-            {
-                if (isAimingUp) newState = isShooting ? "shoot-up-torso" : "up-torso";
-                else if (isAimingDown) newState = isShooting ? "shoot-down-torso" : "down-torso";
-                else newState = isShooting ? "shoot-torso" : "run-torso";
-            }
+            newState = "duck-shoot-torso";
+            _isDuckingTransitionDone = true; // Saltamos la transición si dispara
         }
-        else if (isDucking)
+        else if (isMovingHorizontally)
         {
-            if (isShooting)
+            newState = "duck-walk-torso";
+            _isDuckingTransitionDone = true; // Saltamos la transición si camina agachado
+        }
+        // Lógica de transición (bajar el cuerpo)
+        else if (!_isDuckingTransitionDone)
+        {
+            newState = "duck-torso-animated";
+            // Si la animación de bajar terminó, pasamos a estado estático
+            if (_chestState == "duck-torso-animated" && _davidChest.IsAnimationFinished)
             {
-                newState = "duck-shoot-torso";
                 _isDuckingTransitionDone = true;
             }
-            else if (isMovingHorizontally)
-            {
-                newState = "duck-walk-torso";
-                _isDuckingTransitionDone = true;
-            }
-            else if (!_isDuckingTransitionDone)
-            {
-                newState = "duck-torso-animated";
-                if (_chestState == "duck-torso-animated" && _davidChest.IsAnimationFinished)
-                {
-                    _isDuckingTransitionDone = true;
-                }
-            }
-            else
-            {
-                newState = "duck-torso";
-            }
         }
-        else if (isAimingUp) newState = isShooting ? "shoot-up-torso" : "up-torso";
-        else if (isShooting) newState = "shoot-torso";
-        else if (isMovingHorizontally) newState = "run-torso";
-
-        if (newState != _chestState)
+        else
         {
-            _chestState = newState;
-            bool loop = newState != "duck-torso-animated";
-            if (_davidChest.Animations.ContainsKey(_chestState)) _davidChest.Animations[_chestState].IsLooping = loop;
-            _davidChest.Play(_chestState);
+            newState = "duck-torso"; // Agachado estático (Idle duck)
+        }
+    }
+    // --- PRIORIDAD 3: DE PIE (Suelo) ---
+    else
+    {
+        // Aquí ocurre la magia del Run & Gun
+        
+        // 1. ¿Está mirando arriba? (Gana a todo lo demás)
+        if (isAimingUp)
+        {
+            newState = isShooting ? "shoot-up-torso" : "up-torso";
+        }
+        // 2. ¿Está disparando recto?
+        else if (isShooting)
+        {
+            newState = "shoot-torso";
+        }
+        // 3. ¿Está corriendo? (Solo si no apunta arriba ni dispara, aunque si dispara recto 
+        // a veces se prefiere 'run-shoot-torso' si tienes ese sprite, si no, 'shoot-torso' está bien)
+        else if (isMovingHorizontally)
+        {
+            newState = "run-torso";
+        }
+        // 4. Quieto
+        else
+        {
+            newState = "idle-torso";
         }
     }
 
+    // Aplicar cambios
+    if (newState != _chestState)
+    {
+        _chestState = newState;
+        // Evitamos loop en la animación de transición de agacharse
+        bool loop = newState != "duck-torso-animated"; 
+        
+        if (_davidChest.Animations.ContainsKey(_chestState)) 
+            _davidChest.Animations[_chestState].IsLooping = loop;
+            
+        _davidChest.Play(_chestState);
+    }
+}
     public void handleLegsAnimation()
-    {
-        string newState = "idle-legs";
-        if (_isJumping) newState = _isStandingJump ? "jump-legs" : "jump-legs_run";
-        else if (isDucking)
-        {
-            if (isShooting)
-            {
-                newState = "duck-shoot-legs";
-                _isDuckingTransitionDone = true;
-            }
-            else if (isMovingHorizontally)
-            {
-                newState = "duck-walk-legs";
-                _isDuckingTransitionDone = true;
-            }
-            else if (!_isDuckingTransitionDone)
-            {
-                newState = "duck-legs-animated";
-            }
-            else
-            {
-                newState = "duck-legs";
-            }
-        }
-        else if (isMovingHorizontally) newState = "run-legs";
+{
+    string newState = "idle-legs";
 
-        if (newState != _legState)
+    // --- SALTO ---
+    if (_isJumping)
+    {
+        newState = _isStandingJump ? "jump-legs" : "jump-legs_run";
+    }
+    // --- AGACHADO ---
+    else if (isDucking)
+    {
+        if (isShooting)
         {
-            _legState = newState;
-            if (_davidLegs.Animations.ContainsKey(_legState)) _davidLegs.Animations[_legState].IsLooping = true;
-            _davidLegs.Play(_legState);
+            newState = "duck-shoot-legs"; 
+            _isDuckingTransitionDone = true;
+        }
+        else if (isMovingHorizontally)
+        {
+            newState = "duck-walk-legs";
+            _isDuckingTransitionDone = true;
+        }
+        else if (!_isDuckingTransitionDone)
+        {
+            newState = "duck-legs-animated";
+        }
+        else
+        {
+            newState = "duck-legs";
         }
     }
+    else 
+    {
+        if (isMovingHorizontally)
+        {
+            newState = "run-legs";
+        }
+        else
+        {
+            newState = "idle-legs";
+        }
+    }
+    if (newState != _legState)
+    {
+        _legState = newState;
+        
+        bool loop = newState != "duck-legs-animated";
+
+        if (_davidLegs.Animations.ContainsKey(_legState)) 
+             _davidLegs.Animations[_legState].IsLooping = loop;
+
+        _davidLegs.Play(_legState);
+    }
+}
 
     private void CargarOffsetsDeAnimacion()
     {

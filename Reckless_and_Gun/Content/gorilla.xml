@@ -22,7 +22,6 @@
     </Animation>
 
     <Animation name="gorilla_walking" delay="100">
-     <Frame region="gorilla_walking_0"/>
      <Frame region="gorilla_walking_1"/>
      <Frame region="gorilla_walking_2"/>
      <Frame region="gorilla_walking_3"/>

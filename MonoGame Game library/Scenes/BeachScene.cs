@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGameLibrary;
+using Microsoft.Xna.Framework.Media; // Necesario para Song
+using Microsoft.Xna.Framework.Audio; // Necesario para SoundEffect
+using MonoGameLibrary;               // Necesario para acceder a Core
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
 using MonoGameLibrary.Camera;
@@ -27,6 +29,9 @@ public class BeachScene : Scene
     private Camera2D _camera;
     private Rectangle _exitZone;
     private SpriteFont _uiFont;
+
+    // Variables de audio
+    private Song _beachMusic;
 
     public override void Initialize()
     {
@@ -55,8 +60,21 @@ public class BeachScene : Scene
 
     public override void LoadContent()
     {
-        _uiFont = Content.Load<SpriteFont>("font");
+        // --- AQUÍ PONEMOS LA MÚSICA USANDO TU CORE ---
+        
+        // 1. Cargar la canción (Recuerda: Processor = Song en MGCB)
+        _beachMusic = Content.Load<Song>("Audio/intento 100"); 
 
+        // 2. Usar Core.Audio directamente
+        if (Core.Audio != null && _beachMusic != null)
+        {
+            Core.Audio.SongVolume = 0.5f; 
+            Core.Audio.PlaySong(_beachMusic, true);
+        }
+        SoundEffect sfxShoot = Content.Load<SoundEffect>("Audio/Laser_shoot 5");
+    _david.SetSoundEffects( sfxShoot);
+
+        _uiFont = Content.Load<SpriteFont>("font");
         _background = Content.Load<Texture2D>("beach_map");
         _projectilesAtlas = TextureAtlas.FromFile(Core.Content, "projectiles.xml");
 
@@ -93,6 +111,8 @@ public class BeachScene : Scene
 
         if (_david.IsDead)
         {
+            // Opcional: Parar música al morir
+            // Core.Audio.PlaySong(null); 
             Core.ChangeScene(new GameOverScene());
             return;
         }
@@ -125,7 +145,6 @@ public class BeachScene : Scene
             Core.ChangeScene(new JungleScene());
         }
 
-
         base.Update(gameTime);
     }
 
@@ -145,7 +164,6 @@ public class BeachScene : Scene
         Matrix centerMatrix = Matrix.CreateTranslation(0, offsetY, 0);
         Matrix finalTransform = _camera.GetViewMatrix(Core.GraphicsDevice.Viewport) * centerMatrix;
 
-        // --- DIBUJAR EL MUNDO DEL JUEGO ---
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: finalTransform);
 
         if (_background != null) Core.SpriteBatch.Draw(_background, Vector2.Zero, Color.White);
