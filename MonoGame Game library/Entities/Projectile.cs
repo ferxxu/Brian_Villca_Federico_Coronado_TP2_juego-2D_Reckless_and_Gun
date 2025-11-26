@@ -78,13 +78,7 @@ namespace reckless_and_gun.Entities
         public virtual void OnHitWorld() { IsActive = false; }
         public virtual void OnHitTarget() { IsActive = false; }
 
-        protected void DibujarBordeRectangulo(SpriteBatch spriteBatch, Texture2D tex, Rectangle rect, Color color, int grosor)
-        {
-            spriteBatch.Draw(tex, new Rectangle(rect.Left, rect.Top, rect.Width, grosor), color);
-            spriteBatch.Draw(tex, new Rectangle(rect.Left, rect.Bottom - grosor, rect.Width, grosor), color);
-            spriteBatch.Draw(tex, new Rectangle(rect.Left, rect.Top, grosor, rect.Height), color);
-            spriteBatch.Draw(tex, new Rectangle(rect.Right - grosor, rect.Top, grosor, rect.Height), color);
-        }
+
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (IsActive)
@@ -92,9 +86,6 @@ namespace reckless_and_gun.Entities
                 if (_sprite != null)
                 {
                     _sprite.Draw(spriteBatch, Position);
-
-                    if (DebugTexture != null)
-                        DibujarBordeRectangulo(spriteBatch, DebugTexture, Hitbox, Color.Cyan, 2);
                 }
                 else if (DebugTexture != null)
                 {

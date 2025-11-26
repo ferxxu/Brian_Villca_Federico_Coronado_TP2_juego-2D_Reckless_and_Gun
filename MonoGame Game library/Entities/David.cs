@@ -379,21 +379,6 @@ public class David
         _davidLegs.Draw(spriteBatch, _position + (legOffset * _davidLegs.Scale));
         _davidChest.Draw(spriteBatch, _position + (torsoOffset * _davidChest.Scale));
 
-        if (DebugTexture != null)
-        {
-            Color debugColor = _isJumping ? Color.Red : Color.LimeGreen;
-            if (_isInvulnerable) debugColor = Color.Orange;
-
-            DibujarBordeRectangulo(spriteBatch, DebugTexture, Hitbox, debugColor, 2);
-        }
-    }
-
-    private void DibujarBordeRectangulo(SpriteBatch spriteBatch, Texture2D tex, Rectangle rect, Color color, int grosor)
-    {
-        spriteBatch.Draw(tex, new Rectangle(rect.Left, rect.Top, rect.Width, grosor), color);
-        spriteBatch.Draw(tex, new Rectangle(rect.Left, rect.Bottom - grosor, rect.Width, grosor), color);
-        spriteBatch.Draw(tex, new Rectangle(rect.Left, rect.Top, grosor, rect.Height), color);
-        spriteBatch.Draw(tex, new Rectangle(rect.Right - grosor, rect.Top, grosor, rect.Height), color);
     }
 
    public void handleChestAnimation()
